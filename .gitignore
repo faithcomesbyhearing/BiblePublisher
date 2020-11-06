@@ -1,0 +1,13 @@
+*.log
+*.DS_Store
+*.db
+*.db1
+*.db2
+*.db3
+*.db4
+temp.js
+Credentials.js
+Credentials.py
+Credentials.db
+Credentials.sql
+Versions.db
