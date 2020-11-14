@@ -44,7 +44,8 @@ AssetBuilder.prototype.build = function(callback) {
 	}
 	function processReadFile(file) {
 		if (file) {
-			that.reader.readTextFile(that.types.getUSXPath(file), function(data) {
+			//that.reader.readTextFile(that.types.getUSXPath(file), function(data) {
+			that.reader.readTextFile(file, function(data) {
 				if (data.errno) {
 					if (data.errno === -2) { // file not found
 						console.log('File Not Found', file);

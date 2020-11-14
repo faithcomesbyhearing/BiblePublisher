@@ -45,7 +45,7 @@ cat ../library/io/CharsetAdapter.js >> Publisher.js
 cat ../library/io/VersionsReadAdapter.js >> Publisher.js
 cat ../library/util/LocalizeNumber.js >> Publisher.js
 #cat ../library/manufacture/AssetController.js >> Publisher.js
-cat PublisherMain.js >> Publisher.js
+cat ../library/manufacture/PublisherMain.js >> Publisher.js
 #node Publisher.js $*
 
 ##node ../library/manufacture/CopyBiblesDev.js $*

@@ -13,6 +13,7 @@ function AssetType(location, versionCode) {
 	this.statistics = false;
 	Object.seal(this);
 }
+// The function is used for my own file structure only.
 AssetType.prototype.getUSXPath = function(filename) {
 	return(this.versionCode + '/USX_1/' + filename);
 };
@@ -63,7 +64,8 @@ AssetBuilder.prototype.build = function(callback) {
 	}
 	function processReadFile(file) {
 		if (file) {
-			that.reader.readTextFile(that.types.getUSXPath(file), function(data) {
+			//that.reader.readTextFile(that.types.getUSXPath(file), function(data) {
+			that.reader.readTextFile(file, function(data) {
 				if (data.errno) {
 					if (data.errno === -2) { // file not found
 						console.log('File Not Found', file);
@@ -2628,43 +2630,91 @@ LocalizeNumber.prototype.convert = function(number, offset) {
 	}
 	return(result.join(''));
 };/**
-* Unit Test Harness for AssetController
+* Main Calling program for Publisher.js
 */
-var FILE_PATH = process.env.HOME + '/ShortSands/DBL/2current/';
-var DB_PATH = process.env.HOME + '/ShortSands/DBL/3prepared/';
-	
-if (process.argv.length < 3) {
-	console.log('Usage: ./Publisher.sh VERSION');
-	process.exit(1);
-} else {
-	var version = process.argv[2];
-	console.log('received', version);
-	if (version && version.length > 2) {
-		var types = new AssetType(FILE_PATH, version.toUpperCase());
-		types.chapterFiles = true;
-		types.tableContents = true;
-		types.concordance = true;
-		types.styleIndex = true;
-		types.statistics = true;
-		var database = new DeviceDatabase(DB_PATH + version.toUpperCase() + '.db');
-		var versionAdapter = new VersionsReadAdapter();
-		versionAdapter.readVersion(version.toUpperCase(), function(pubVersion) {
-			if (pubVersion) {
-				var builder = new AssetBuilder(types, database, pubVersion);
-				builder.build(function(err) {
-					if (err instanceof IOError) {
-						console.log('FAILED', JSON.stringify(err));
-						process.exit(1);
-					} else {
-						console.log('Success, Database created');
-					}
-				});		
-			}
-			else {
-				console.log('FAILED TO GET LANGUAGE');
-				process.exit(1);
-			}
-		});
-	}
+
+function PublisherMain() {
 }
+
+PublisherMain.prototype.process = function(inputDir, outputDir, bibleId, iso3, iso1, direction) {
+	var types = new AssetType(inputDir, bibleId);
+	types.chapterFiles = true;
+	types.tableContents = true;
+	types.concordance = true;
+	types.styleIndex = true;
+	types.statistics = true;
+	var database = new DeviceDatabase(outputDir + bibleId + '.db');
+	var pubVersion = new PubVersion(iso3, iso1, direction);
+	var builder = new AssetBuilder(types, database, pubVersion);
+	builder.build(function(err) {
+		if (err instanceof IOError) {
+			console.log('FAILED', JSON.stringify(err));
+			process.exit(1);
+		} else {
+			console.log('Success, Bible created');
+		}
+	});
+};
+
+function usageMessage() {
+	console.log('USAGE: node Publisher.js inputDir outputDir bibleId iso3 iso1 direction');
+	process.exit(1);	
+}
+	
+if (process.argv.length < 8) {
+	console.log("ERROR: Not all parameters are included.");
+	usageMessage();
+}
+const fs = require('fs');
+var inputDir = process.argv[2];
+if (!fs.existsSync(inputDir)) {
+	console.log("ERROR: Input directory '%s' must exist.", inputDir);
+	usageMessage();
+}
+const files = fs.readdirSync(inputDir);
+var usxCount = 0
+files.forEach(file => {
+    if (file.endsWith(".usx") || file.endsWith(".USX")) {
+    	usxCount += 1
+    } else if (!file.startsWith(".")) {
+    	console.log("INFO: Cannot process file %s.", file);
+    }
+    if (usxCount == 0) {
+    	console.log("ERROR: There are no .usx files in inputDir '%s'.", inputDir);
+    	usageMessage();
+    }
+});
+if (!inputDir.endsWith("/")) {
+	inputDir += "/";
+}
+var outputDir = process.argv[3];
+if (!fs.existsSync(outputDir)) {
+	console.log("ERROR: Output directory '%s' must exist.", outputDir);
+	usageMessage();
+}
+if (!outputDir.endsWith("/")) {
+	outputDir += "/";
+}
+const bibleId = process.argv[4];
+if (bibleId.length < 4) {
+	console.log("ERROR: Bibleid '%s' must be at least 4 characters.", bibleId);
+	usageMessage();
+}
+const iso3 = process.argv[5].toLowerCase();
+if (iso3.length != 3) {
+	console.log("ERROR: iso3 code '%s' must be 3 characters long.", iso3);
+	usageMessage();
+}
+const iso1 = process.argv[6].toLowerCase();
+if (iso1.length != 2 && iso1 != "null") {
+	console.log("ERROR: iso1 code '%s' must be 2 characters long or is must be null.", iso1);
+	usageMessage();
+}
+const direction = process.argv[7].toLowerCase();
+if (direction != "ltr" && direction != "rtl") {
+	console.log("ERROR: direction '%s' must be ltr or rtl.", direction);
+	usageMessage();
+}
+var publisher = new PublisherMain()
+publisher.process(inputDir, outputDir, bibleId, iso3, iso1, direction)
 

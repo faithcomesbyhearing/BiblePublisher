@@ -3,10 +3,10 @@
 The Publisher program prepares Bible Text for publication in the BibleApp.  It expects the Bible text to be in USX form, and translates it into publication ready text stored in a Sqlite database.  The Publisher program prepares the following content into the following Sqlite tables:
 
 1. tableContent: contains data needed to present a Table of Contents, page headings and abbreviations.
-    i.e. code, heading, title, name, abbrev, lastChapter.
-2. chapters: contains the Bible text in HTML form, and a reference as a primary key.
+    i.e. bookCode, heading, title, name, abbrev, lastChapter, priorBook, nextBook, chapterRowId
+2. chapters: contains the Bible text in HTML form, and a reference as a primary key.  An example reference is JHN:3
 3. concordance: contains one row for each word in the Bible, and an index to all references for that word.
-4. verses: contains one row of text for each verse in the Bible including the text.  This is used to present search results.
+4. verses: contains one row of text for each verse in the Bible including the text.  This is used to present search results.  An example references is ROM:9:2-3
 5. styleUse: contain a list of USFM/USX styles that occurred in the translation and the references.  This is used to ensure the App supports all of the needed styles.
 6. styleIndex: contains a summary list of the USFM/USX styles that occurred in the translation.
 7. charset: contains one row for each character that occurs.  It is used during validation.
@@ -34,7 +34,7 @@ The database supports a simplified, but near standard SQL that will seem familia
 Some novel differences that one must know.
 1. To open a database simply type: sqlite3 filename
 2. To see a list of tables, type: .tables
-3. To see a description of one table, type: .schema tableName
+3. To see a description of a table, type: .schema tableName
 4. To exit sqlite, type: .exit
 
 ## TBD

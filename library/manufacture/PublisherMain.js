@@ -5,7 +5,7 @@
 function PublisherMain() {
 }
 
-Publisher.prototype.process = function(inputDir, outputDir, bibleId, iso3, iso1, direction) {
+PublisherMain.prototype.process = function(inputDir, outputDir, bibleId, iso3, iso1, direction) {
 	var types = new AssetType(inputDir, bibleId);
 	types.chapterFiles = true;
 	types.tableContents = true;
@@ -84,6 +84,6 @@ if (direction != "ltr" && direction != "rtl") {
 	console.log("ERROR: direction '%s' must be ltr or rtl.", direction);
 	usageMessage();
 }
-publisher = new PublisherMain()
+var publisher = new PublisherMain()
 publisher.process(inputDir, outputDir, bibleId, iso3, iso1, direction)
 

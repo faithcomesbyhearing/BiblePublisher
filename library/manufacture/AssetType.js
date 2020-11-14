@@ -12,6 +12,7 @@ function AssetType(location, versionCode) {
 	this.statistics = false;
 	Object.seal(this);
 }
+// The function is used for my own file structure only.
 AssetType.prototype.getUSXPath = function(filename) {
 	return(this.versionCode + '/USX_1/' + filename);
 };
