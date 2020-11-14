@@ -2,6 +2,29 @@
 * Main Calling program for Publisher.js
 */
 
+function PublisherMain() {
+}
+
+Publisher.prototype.process = function(inputDir, outputDir, bibleId, iso3, iso1, direction) {
+	var types = new AssetType(inputDir, bibleId);
+	types.chapterFiles = true;
+	types.tableContents = true;
+	types.concordance = true;
+	types.styleIndex = true;
+	types.statistics = true;
+	var database = new DeviceDatabase(outputDir + bibleId + '.db');
+	var pubVersion = new PubVersion(iso3, iso1, direction);
+	var builder = new AssetBuilder(types, database, pubVersion);
+	builder.build(function(err) {
+		if (err instanceof IOError) {
+			console.log('FAILED', JSON.stringify(err));
+			process.exit(1);
+		} else {
+			console.log('Success, Bible created');
+		}
+	});
+};
+
 function usageMessage() {
 	console.log('USAGE: node Publisher.js inputDir outputDir bibleId iso3 iso1 direction');
 	process.exit(1);	
@@ -61,22 +84,6 @@ if (direction != "ltr" && direction != "rtl") {
 	console.log("ERROR: direction '%s' must be ltr or rtl.", direction);
 	usageMessage();
 }
-console.log(inputDir);
-console.log(outputDir);
-var types = new AssetType(inputDir, bibleId);
-types.chapterFiles = true;
-types.tableContents = true;
-types.concordance = true;
-types.styleIndex = true;
-types.statistics = true;
-var database = new DeviceDatabase(outputDir + bibleId + '.db');
-var pubVersion = new PubVersion(iso3, iso1, direction);
-//var builder = new AssetBuilder(types, database, pubVersion);
-//builder.build(function(err) {
-//	if (err instanceof IOError) {
-//		console.log('FAILED', JSON.stringify(err));
-//		process.exit(1);
-//	} else {
-//		console.log('Success, Bible created');
-//	}
-//});
+publisher = new PublisherMain()
+publisher.process(inputDir, outputDir, bibleId, iso3, iso1, direction)
+

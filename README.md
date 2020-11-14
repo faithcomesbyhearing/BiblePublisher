@@ -27,7 +27,8 @@ Publisher expects a parameters on the command line.  There is no configuration f
 
 ## Using Sqlite
 
-The output of this process is a sqlite database.  It can be downloaded at: https://sqlite.org/download.html
+The output of this process is a sqlite database.  Any Sqlite database is stored in a single file that normally resides
+on the user's computer.  Sqlite can be downloaded at: https://sqlite.org/download.html
 The database supports a simplified, but near standard SQL that will seem familiar to anyone who has used a different SQL database.
 
 Some novel differences that one must know.
