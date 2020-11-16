@@ -1978,10 +1978,10 @@ function DOMText(text) {
 * This class is used to carry information about the language and version
 * for the publish program.
 */
-function PubVersion(row) {
-	this.silCode = row.silCode;
-	this.langCode = row.langCode;
-	this.direction = row.direction;
+function PubVersion(silCode, langCode, direction) {
+	this.silCode = silCode;
+	this.langCode = langCode;
+	this.direction = direction;
 	Object.freeze(this);
 }/**
 * This class is a wrapper for SQL Error so that we can always distinguish an error
