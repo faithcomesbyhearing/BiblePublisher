@@ -104,6 +104,8 @@ DBLMetaData.prototype.parseXML = function(data) {
 
 DBLMetaData.prototype.useFilenameSeq = function(directory) {
 	console.log("no file to read, use sequence indicators");
+	let files = fs.dir.readSync(directory);
+	console.log(files);
 
 };
 
