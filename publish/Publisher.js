@@ -1996,45 +1996,44 @@ function DBLMetaData() {
 	this.scriptName = null;
 	this.scriptDirection = null;
 	this.bookSequence = []
-	//Object.seal(this);
+	Object.seal(this);
 }
 
 DBLMetaData.prototype.parse = function(directory) {
-	var metaReader = new FileReader(directory);
-	var that = this;
-	metaReader.fileExists("metadata.xml", function(exists) {
-		if (exists != null) {
-			that.useFilenameSeq();
-		} else {
-			metaReader.readTextFile("metadata.xml", function(data) {
-				that.parseXML(data);
-				console.log("success");
-				console.log(that);		
-			});
-		}
-	});
-};
+	const fs = require('fs');
+	let pathname = directory + "metadata.xm";
+	let exists = fs.existsSync(pathname);
+	if (!exists) {
+		pathname = directory + "../metadata.xml";
+		exists = fs.existsSync(pathname);
+	}
+	console.log(exists, pathname);
+	if (exists) {
+		let data = fs.readFileSync(pathname,"utf-8");
+		this.parseXML(data);
+	} else {
+		this.useFilenameSeq(directory);
+	}
+}
 
 DBLMetaData.prototype.parseXML = function(data) {
 	var reader = new XMLTokenizer(data);
 	var stack = [];
 	var attrName = null;
 	while (tokenType !== XMLNodeType.END) {
-		console.log(stack);
+		//console.log(stack);
 		var tokenType = reader.nextToken();
 		var tokenValue = reader.tokenValue();
-		console.log('type=|' + tokenType + '|  value=|' + tokenValue + '|');
+		//console.log('type=|' + tokenType + '|  value=|' + tokenValue + '|');
 
 		switch(tokenType) {
 			case XMLNodeType.ELE:
-				console.log("push", tokenValue);
 				stack.push(tokenValue);
 				break;
 			case XMLNodeType.ELE_OPEN:
 				stack.push(tokenValue);
 				break;
 			case XMLNodeType.ATTR_NAME:
-				//tempNode[tokenValue] = '';
 				attrName = tokenValue;
 				break;
 			case XMLNodeType.ATTR_VALUE:
@@ -2044,7 +2043,7 @@ DBLMetaData.prototype.parseXML = function(data) {
 							if (stack[3] == "books") {
 								if (stack[4] == "book") {
 									if (attrName == "code") {
-										this.bookSequence.push(tokenValue);
+										this.bookSequence.push(tokenValue + ".usx");
 									}
 								}
 							}
@@ -2053,7 +2052,6 @@ DBLMetaData.prototype.parseXML = function(data) {
 				}
 				break;
 			case XMLNodeType.TEXT:
-				console.log("TEXT", tokenValue);
 				if (stack.length == 3) {
 					if (stack[1] == "identification") {
 						if (stack[2] == "name") {
@@ -2089,15 +2087,7 @@ DBLMetaData.prototype.parseXML = function(data) {
 	}
 };
 
-	//if (reader.fileExists)
-	// check if file exists metada
-	// call parser
-	// if not exist, check if files have SEQ numbers
-	// if so read files
-	// if not present use default sequenct to find the list of books, use Cano
-
-
-DBLMetaData.prototype.useFilenameSeq = function() {
+DBLMetaData.prototype.useFilenameSeq = function(directory) {
 	console.log("no file to read, use sequence indicators");
 
 };
@@ -2636,7 +2626,6 @@ FileReader.prototype.fileExists = function(filepath, callback) {
 			err.filepath = filepath;
 			callback(err);
 		} else {
-			//callback(stat);
 			callback();
 		}
 	});
@@ -3344,6 +3333,6 @@ publisher.process(inputDir, outputDir, bibleId, iso3, iso1, direction)
 **/
 var metadata = new DBLMetaData();
 metadata.parse("/Volumes/FCBH/files/validate/text/PESNMV/PESNMV/");
-//console.log("done");
-//console.log(metadata);
+console.log("done");
+console.log(metadata);
 
