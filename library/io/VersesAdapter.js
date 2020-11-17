@@ -11,7 +11,6 @@ VersesAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop verses success');
 			callback();
 		}
 	});
@@ -25,7 +24,6 @@ VersesAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create verses success');
 			callback();
 		}
 	});

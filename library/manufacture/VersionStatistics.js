@@ -59,7 +59,7 @@ VersionStatistics.prototype.loadDB = function(callback) {
 		var hex = Number(charCode).toString(16).toUpperCase();
 		if (hex.length === 3) hex = '0' + hex;
 		if (hex.length === 2) hex = '00' + hex;
-		console.log(hex, char, count);
+		//console.log(hex, char, count);
 		array.push([ hex, char, count ]);
 	}
 	this.adapter.load(array, function(err) {
@@ -67,7 +67,6 @@ VersionStatistics.prototype.loadDB = function(callback) {
 			console.log('Charset Load Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('Charset loaded in database');
 			callback();
 		}
 	});

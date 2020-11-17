@@ -11,7 +11,6 @@ StyleIndexAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop styleIndex success');
 			callback();
 		}
 	});
@@ -27,7 +26,6 @@ StyleIndexAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create styleIndex success');
 			callback();
 		}
 	});

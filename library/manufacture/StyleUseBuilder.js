@@ -41,7 +41,6 @@ StyleUseBuilder.prototype.loadDB = function(callback) {
 			console.log('StyleUse Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('StyleUse loaded in database');
 			callback();
 		}
 	});

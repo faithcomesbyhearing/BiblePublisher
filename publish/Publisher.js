@@ -177,7 +177,7 @@ VersionStatistics.prototype.loadDB = function(callback) {
 		var hex = Number(charCode).toString(16).toUpperCase();
 		if (hex.length === 3) hex = '0' + hex;
 		if (hex.length === 2) hex = '00' + hex;
-		console.log(hex, char, count);
+		//console.log(hex, char, count);
 		array.push([ hex, char, count ]);
 	}
 	this.adapter.load(array, function(err) {
@@ -185,7 +185,6 @@ VersionStatistics.prototype.loadDB = function(callback) {
 			console.log('Charset Load Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('Charset loaded in database');
 			callback();
 		}
 	});
@@ -240,7 +239,6 @@ ChapterBuilder.prototype.loadDB = function(callback) {
 			console.log('Storing chapters failed');
 			callback(err);
 		} else {
-			console.log('store chapters success');
 			callback();
 		}
 	});	
@@ -282,7 +280,6 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			console.log('Storing verses failed');
 			callback(err);
 		} else {
-			console.log('store verses success');
 			callback();
 		}
 	});
@@ -417,7 +414,6 @@ TOCBuilder.prototype.loadDB = function(callback) {
 			console.log('TOC Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('TOC loaded in database');
 			callback();
 		}
 	});
@@ -537,7 +533,6 @@ ConcordanceBuilder.prototype.loadDB = function(callback) {
 			console.log('Concordance Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('concordance loaded in database');
 			callback();
 		}
 	});
@@ -634,7 +629,6 @@ StyleIndexBuilder.prototype.loadDB = function(callback) {
 			console.log('StyleIndex Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('StyleIndex loaded in database');
 			callback();
 		}
 	});
@@ -685,7 +679,6 @@ StyleUseBuilder.prototype.loadDB = function(callback) {
 			console.log('StyleUse Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('StyleUse loaded in database');
 			callback();
 		}
 	});
@@ -2283,7 +2276,6 @@ ChaptersAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop chapters success');
 			callback();
 		}
 	});
@@ -2297,7 +2289,6 @@ ChaptersAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create chapters success');
 			callback();
 		}
 	});
@@ -2337,7 +2328,6 @@ VersesAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop verses success');
 			callback();
 		}
 	});
@@ -2351,7 +2341,6 @@ VersesAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create verses success');
 			callback();
 		}
 	});
@@ -2400,7 +2389,6 @@ ConcordanceAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop concordance success');
 			callback();
 		}
 	});
@@ -2416,7 +2404,6 @@ ConcordanceAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create concordance success');
 			callback();
 		}
 	});
@@ -2504,7 +2491,6 @@ TableContentsAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop tableContents success');
 			callback();
 		}
 	});
@@ -2524,7 +2510,6 @@ TableContentsAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create tableContents success');
 			callback();
 		}
 	});
@@ -2572,7 +2557,6 @@ StyleIndexAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop styleIndex success');
 			callback();
 		}
 	});
@@ -2588,7 +2572,6 @@ StyleIndexAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create styleIndex success');
 			callback();
 		}
 	});
@@ -2616,7 +2599,6 @@ StyleUseAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop styleUse success');
 			callback();
 		}
 	});
@@ -2630,7 +2612,6 @@ StyleUseAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create styleUse success');
 			callback();
 		}
 	});
@@ -2658,7 +2639,6 @@ CharsetAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop charset success');
 			callback();
 		}
 	});
@@ -2672,7 +2652,6 @@ CharsetAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create charset success');
 			callback();
 		}
 	});

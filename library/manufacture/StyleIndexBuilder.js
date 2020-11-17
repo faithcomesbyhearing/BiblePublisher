@@ -88,7 +88,6 @@ StyleIndexBuilder.prototype.loadDB = function(callback) {
 			console.log('StyleIndex Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('StyleIndex loaded in database');
 			callback();
 		}
 	});

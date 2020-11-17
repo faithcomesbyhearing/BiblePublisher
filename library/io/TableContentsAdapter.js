@@ -11,7 +11,6 @@ TableContentsAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop tableContents success');
 			callback();
 		}
 	});
@@ -31,7 +30,6 @@ TableContentsAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create tableContents success');
 			callback();
 		}
 	});

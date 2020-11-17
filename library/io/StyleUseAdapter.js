@@ -11,7 +11,6 @@ StyleUseAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop styleUse success');
 			callback();
 		}
 	});
@@ -25,7 +24,6 @@ StyleUseAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create styleUse success');
 			callback();
 		}
 	});

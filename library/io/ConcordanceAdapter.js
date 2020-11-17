@@ -11,7 +11,6 @@ ConcordanceAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop concordance success');
 			callback();
 		}
 	});
@@ -27,7 +26,6 @@ ConcordanceAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create concordance success');
 			callback();
 		}
 	});

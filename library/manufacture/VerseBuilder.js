@@ -35,7 +35,6 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			console.log('Storing verses failed');
 			callback(err);
 		} else {
-			console.log('store verses success');
 			callback();
 		}
 	});

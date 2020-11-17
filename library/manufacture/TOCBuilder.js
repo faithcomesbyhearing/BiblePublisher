@@ -75,7 +75,6 @@ TOCBuilder.prototype.loadDB = function(callback) {
 			console.log('TOC Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('TOC loaded in database');
 			callback();
 		}
 	});

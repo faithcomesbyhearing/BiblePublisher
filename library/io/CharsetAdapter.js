@@ -11,7 +11,6 @@ CharsetAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop charset success');
 			callback();
 		}
 	});
@@ -25,7 +24,6 @@ CharsetAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create charset success');
 			callback();
 		}
 	});

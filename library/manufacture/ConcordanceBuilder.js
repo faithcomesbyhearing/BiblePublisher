@@ -111,7 +111,6 @@ ConcordanceBuilder.prototype.loadDB = function(callback) {
 			console.log('Concordance Builder Failed', JSON.stringify(err));
 			callback(err);
 		} else {
-			console.log('concordance loaded in database');
 			callback();
 		}
 	});

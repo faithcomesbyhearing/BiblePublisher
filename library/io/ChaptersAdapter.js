@@ -13,7 +13,6 @@ ChaptersAdapter.prototype.drop = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('drop chapters success');
 			callback();
 		}
 	});
@@ -27,7 +26,6 @@ ChaptersAdapter.prototype.create = function(callback) {
 		if (err instanceof IOError) {
 			callback(err);
 		} else {
-			console.log('create chapters success');
 			callback();
 		}
 	});

@@ -49,7 +49,6 @@ ChapterBuilder.prototype.loadDB = function(callback) {
 			console.log('Storing chapters failed');
 			callback(err);
 		} else {
-			console.log('store chapters success');
 			callback();
 		}
 	});	
