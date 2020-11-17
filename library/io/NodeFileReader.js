@@ -15,7 +15,7 @@ FileReader.prototype.fileExists = function(filepath, callback) {
 			err.filepath = filepath;
 			callback(err);
 		} else {
-			callback(stat);
+			callback();
 		}
 	});
 };

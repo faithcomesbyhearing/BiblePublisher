@@ -32,6 +32,7 @@ cat ../library/model/meta/TOCBook.js >> Publisher.js
 cat ../library/model/meta/Concordance.js >> Publisher.js
 cat ../library/model/meta/DOMNode.js >> Publisher.js
 cat ../library/model/meta/PubVersion.js >> Publisher.js
+cat ../library/model/meta/DBLMetaData.js >> Publisher.js
 cat ../library/io/IOError.js >> Publisher.js
 cat ../library/io/NodeFileReader.js >> Publisher.js
 cat ../library/io/DeviceDatabaseNode.js >> Publisher.js
@@ -44,8 +45,7 @@ cat ../library/io/StyleUseAdapter.js >> Publisher.js
 cat ../library/io/CharsetAdapter.js >> Publisher.js
 cat ../library/io/VersionsReadAdapter.js >> Publisher.js
 cat ../library/util/LocalizeNumber.js >> Publisher.js
-#cat ../library/manufacture/AssetController.js >> Publisher.js
 cat ../library/manufacture/PublisherMain.js >> Publisher.js
-#node Publisher.js $*
 
-##node ../library/manufacture/CopyBiblesDev.js $*
+node Publisher.js $*
+

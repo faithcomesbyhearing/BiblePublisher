@@ -1,5 +1,6 @@
 /**
 * Unit Test Harness for AssetController
+* This class is no longer used as of Nov 2020.
 */
 var FILE_PATH = process.env.HOME + '/ShortSands/DBL/2current/';
 var DB_PATH = process.env.HOME + '/ShortSands/DBL/3prepared/';

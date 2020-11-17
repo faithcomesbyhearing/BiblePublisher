@@ -1,6 +1,8 @@
 /**
 * Bibles converted by Paratext contain 6 digit names that include a 3 digit number to define
 * sequence.  These numbers must be removed for processing.
+*
+* This file is not used as of Nov 2020
 */
 function ParaTextPostProcess(version) {
 	this.version = version;
