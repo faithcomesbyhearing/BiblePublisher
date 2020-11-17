@@ -33,10 +33,11 @@ function AssetBuilder(types, database, pubVersion) {
 AssetBuilder.prototype.build = function(callback) {
 	var that = this;
 	if (this.builders.length > 0) {
+		let metadata = new DBLMetaData();
+		metadata.parse(this.types.location);
 		this.filesToProcess.splice(0);
-		var canon = new Canon();
-		for (var i=0; i<canon.books.length; i++) {
-			this.filesToProcess.push(canon.books[i].code + '.usx');
+		for (let i=0; i<metadata.bookSequence.length; i++) {
+			this.filesToProcess.push(metadata.bookSequence[i]);
 		}
 		processReadFile(this.filesToProcess.shift());
 	} else {

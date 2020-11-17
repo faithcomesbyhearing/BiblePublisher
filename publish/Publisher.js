@@ -53,10 +53,11 @@ function AssetBuilder(types, database, pubVersion) {
 AssetBuilder.prototype.build = function(callback) {
 	var that = this;
 	if (this.builders.length > 0) {
+		let metadata = new DBLMetaData();
+		metadata.parse(this.types.location);
 		this.filesToProcess.splice(0);
-		var canon = new Canon();
-		for (var i=0; i<canon.books.length; i++) {
-			this.filesToProcess.push(canon.books[i].code + '.usx');
+		for (let i=0; i<metadata.bookSequence.length; i++) {
+			this.filesToProcess.push(metadata.bookSequence[i]);
 		}
 		processReadFile(this.filesToProcess.shift());
 	} else {
@@ -2797,7 +2798,7 @@ PublisherMain.prototype.process = function(inputDir, outputDir, bibleId, iso3, i
 		}
 	});
 };
-/**
+
 function usageMessage() {
 	console.log('USAGE: node Publisher.js inputDir outputDir bibleId iso3 iso1 direction');
 	process.exit(1);	
@@ -2860,10 +2861,10 @@ if (direction != "ltr" && direction != "rtl") {
 
 var publisher = new PublisherMain()
 publisher.process(inputDir, outputDir, bibleId, iso3, iso1, direction)
-**/
-var metadata = new DBLMetaData();
-metadata.parse("/Volumes/FCBH/files/validate/text/PESNMV/PESNMV/");
+
+//var metadata = new DBLMetaData();
+//metadata.parse("/Volumes/FCBH/files/validate/text/PESNMV/PESNMV/");
 //metadata.parse("/Volumes/FCBH/files/validate/text/HOCIEM/HOCIEM/");
-console.log("done");
-console.log(metadata);
+//console.log("done");
+//console.log(metadata);
 
