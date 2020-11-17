@@ -2082,11 +2082,9 @@ DBLMetaData.prototype.parseXML = function(data) {
 };
 
 DBLMetaData.prototype.useFilenameSeq = function(directory) {
-	console.log("no file to read, use sequence indicators");
 	const fs = require('fs');
 	let files = fs.readdirSync(directory);
 	for (let i=0; i<files.length; i++) {
-		console.log(files[i]);
 		if (!files[i].startsWith(".") && (files[i].endsWith(".usx") || files[i].endsWith(".USX"))) {
 			this.bookSequence.push(files[i])
 			if (files[i].length < 8) {
@@ -2101,8 +2099,6 @@ DBLMetaData.prototype.useCanonSeq = function(files) {
 	for (let i=0; i<files.length; i++) {
 		fileSet.add(files[i]);
 	}
-	console.log(fileSet);
-	console.log("use canon sequence");
 	this.bookSequence.splice(0);
 	var canon = new Canon();
 	for (var i=0; i<canon.books.length; i++) {
