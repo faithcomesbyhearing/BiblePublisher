@@ -90,6 +90,7 @@ publisher.process(inputDir, outputDir, bibleId, iso3, iso1, direction)
 **/
 var metadata = new DBLMetaData();
 metadata.parse("/Volumes/FCBH/files/validate/text/PESNMV/PESNMV/");
+//metadata.parse("/Volumes/FCBH/files/validate/text/HOCIEM/HOCIEM/");
 console.log("done");
 console.log(metadata);
 

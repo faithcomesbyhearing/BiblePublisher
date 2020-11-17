@@ -104,12 +104,39 @@ DBLMetaData.prototype.parseXML = function(data) {
 
 DBLMetaData.prototype.useFilenameSeq = function(directory) {
 	console.log("no file to read, use sequence indicators");
-	let files = fs.dir.readSync(directory);
-	console.log(files);
-
+	const fs = require('fs');
+	let files = fs.readdirSync(directory);
+	for (let i=0; i<files.length; i++) {
+		console.log(files[i]);
+		if (!files[i].startsWith(".") && (files[i].endsWith(".usx") || files[i].endsWith(".USX"))) {
+			this.bookSequence.push(files[i])
+			if (files[i].length < 8) {
+				this.useCanonSeq(files);
+			}
+		}
+	}
 };
 
-DBLMetaData.prototype.useCanonSeq = function() {
-
+DBLMetaData.prototype.useCanonSeq = function(files) {
+	let fileSet = new Set();
+	for (let i=0; i<files.length; i++) {
+		fileSet.add(files[i]);
+	}
+	console.log(fileSet);
+	console.log("use canon sequence");
+	this.bookSequence.splice(0);
+	var canon = new Canon();
+	for (var i=0; i<canon.books.length; i++) {
+		let filename = canon.books[i].code + ".usx";
+		if (fileSet.has(filename)) {
+			this.bookSequence.push(filename);
+		}
+		else {
+			filename = canon.books[i].code + ".USX";
+			if (fileSet.has(filename)) {
+				this.bookSequence.push(filename);
+			}
+		}
+	}
 };
 

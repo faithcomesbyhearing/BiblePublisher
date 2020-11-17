@@ -23,7 +23,14 @@ Publisher expects a parameters on the command line.  There is no configuration f
 	bibleId - This should be the primary identifier of the bible language and version.
 	iso3 - This should be the 3 character ISO 639-3 language code.
 	iso1 - This should be the 2 character ISO 639-1 language code or null when there is no iso1 code.
-	direction - This should be the direction of the script, either 'ltr' or 'rtl'. 
+	direction - This should be the direction of the script, either 'ltr' or 'rtl'.
+
+## Table of Contents Book Sequence
+
+The book sequence information can be picked up in anyone of three ways.
+1) If there is a DBL metadata.xml file, the program will use the sequence information in that file.  The metadata.xml file can be in the same directory as the .usx files, or it can be one directory above.  If it is anywhere else, it will be ignored.
+2) If there is no metadata.xml file, but .usx filenames contain a sequence numbers, such as 041MAT.usx, 042MRK.usx, then that number will be used to define the sequence.
+3) If there is neither a metadata.xml file, and there is no sequence numbers in the filenames, then the 66 book protestant Canon will be used to define the book sequence.
 
 ## Using Sqlite
 
@@ -36,22 +43,6 @@ Some novel differences that one must know.
 2. To see a list of tables, type: .tables
 3. To see a description of a table, type: .schema tableName
 4. To exit sqlite, type: .exit
-
-## TBD
-
-At this writing the Publisher program expects a specific directory structure so that many versions can be processed quickly in an organized manner.
-
-The source USX files are expected in the following location:
-
-    $HOME/ShortSands/DBL/2current/<VersionId>/USX_1/<chapter_files>.usx
-
-To execute the Publisher program you must have both the Publisher directory and the Library directory on your desktop.  The unix/mac command line script is as follows:
-
-    ./Publisher.sh VersionId
-
-The program will create a Sqlite database at the following location with all of the above tables as described.  The directory shown must already exist.
-
-    $HOME/ShortSands/DBL/3prepared/
 
 
 
