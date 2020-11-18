@@ -22,10 +22,9 @@ TableContentsAdapter.prototype.create = function(callback) {
     	'title text not null, ' +
     	'name text not null, ' +
     	'abbrev text not null, ' +
-		'lastChapter integer not null, ' +
+		'chapters text not null, ' +
 		'priorBook text null, ' +
-		'nextBook text null, ' +
-		'chapterRowId integer not null)';
+		'nextBook text null)';
 	this.database.executeDDL(statement, function(err) {
 		if (err instanceof IOError) {
 			callback(err);
@@ -35,9 +34,8 @@ TableContentsAdapter.prototype.create = function(callback) {
 	});
 };
 TableContentsAdapter.prototype.load = function(array, callback) {
-	var statement = 'insert into tableContents(code, heading, title, name, abbrev, lastChapter, priorBook, nextBook, chapterRowId) ' +
-		'values (?,?,?,?,?,?,?,?,?)';
-	//this.database.manyExecuteDML(statement, array, function(count) {
+	var statement = 'insert into tableContents(code, heading, title, name, abbrev, chapters, priorBook, nextBook) ' +
+		'values (?,?,?,?,?,?,?,?)';
 	this.database.bulkExecuteDML(statement, array, function(count) {
 		if (count instanceof IOError) {
 			callback(count);
@@ -48,7 +46,7 @@ TableContentsAdapter.prototype.load = function(array, callback) {
 	});
 };
 TableContentsAdapter.prototype.selectAll = function(callback) {
-	var statement = 'select code, heading, title, name, abbrev, lastChapter, priorBook, nextBook, chapterRowId ' +
+	var statement = 'select code, heading, title, name, abbrev, chapters, priorBook, nextBook ' +
 		'from tableContents order by rowid';
 	this.database.select(statement, [], function(results) {
 		if (results instanceof IOError) {
@@ -58,7 +56,7 @@ TableContentsAdapter.prototype.selectAll = function(callback) {
 			for (var i=0; i<results.rows.length; i++) {
 				var row = results.rows.item(i);
 				var tocBook = new TOCBook(row.code, row.heading, row.title, row.name, row.abbrev, 
-					row.lastChapter, row.priorBook, row.nextBook, row.chapterRowId);
+					row.chapters.join(","), row.priorBook, row.nextBook, row.chapterRowId);
 				array.push(tocBook);
 			}
 			callback(array);

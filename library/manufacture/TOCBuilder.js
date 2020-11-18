@@ -6,7 +6,6 @@ function TOCBuilder(adapter) {
 	this.adapter = adapter;
 	this.toc = new TOC(adapter);
 	this.tocBook = null;
-	this.chapterRowSum = 1; // Initial value for first Book
 	Object.seal(this);
 }
 TOCBuilder.prototype.readBook = function(usxRoot) {
@@ -22,13 +21,10 @@ TOCBuilder.prototype.readRecursively = function(node) {
 			}
 			this.tocBook = new TOCBook(node.code);
 			this.tocBook.priorBook = priorBook;
-			this.tocBook.chapterRowId = this.chapterRowSum;
-			this.chapterRowSum++; // add 1 for chapter 0.
 			this.toc.addBook(this.tocBook);
 			break;
 		case 'chapter':
-			this.tocBook.lastChapter = node.number;
-			this.chapterRowSum++;
+			this.tocBook.chapters.push(node.number);
 			break;
 		case 'para':
 			switch(node.style) {
@@ -65,9 +61,8 @@ TOCBuilder.prototype.loadDB = function(callback) {
 		var title = toc.title || toc.name || toc.heading;
 		var name = toc.name || toc.heading;
 		var abbrev = toc.abbrev || toc.name || toc.heading;
-		if (toc.lastChapter == null) toc.lastChapter = 0; // ERV does not have chapters in FRT and GLO
-		var values = [ toc.code, heading, title, name, abbrev, toc.lastChapter, 
-			toc.priorBook, toc.nextBook, toc.chapterRowId ];
+		var values = [ toc.code, heading, title, name, abbrev, toc.chapters.join(","), 
+			toc.priorBook, toc.nextBook ];
 		array.push(values);
 	}
 	this.adapter.load(array, function(err) {

@@ -345,7 +345,7 @@ function TOCBuilder(adapter) {
 	this.adapter = adapter;
 	this.toc = new TOC(adapter);
 	this.tocBook = null;
-	this.chapterRowSum = 1; // Initial value for first Book
+	//this.chapterRowSum = 1; // Initial value for first Book
 	Object.seal(this);
 }
 TOCBuilder.prototype.readBook = function(usxRoot) {
@@ -361,13 +361,14 @@ TOCBuilder.prototype.readRecursively = function(node) {
 			}
 			this.tocBook = new TOCBook(node.code);
 			this.tocBook.priorBook = priorBook;
-			this.tocBook.chapterRowId = this.chapterRowSum;
-			this.chapterRowSum++; // add 1 for chapter 0.
+			//this.tocBook.chapterRowId = this.chapterRowSum;
+			//this.chapterRowSum++; // add 1 for chapter 0.
 			this.toc.addBook(this.tocBook);
 			break;
 		case 'chapter':
-			this.tocBook.lastChapter = node.number;
-			this.chapterRowSum++;
+			//this.tocBook.lastChapter = node.number;
+			this.tocBook.chapters.push(node.number);
+			//this.chapterRowSum++;
 			break;
 		case 'para':
 			switch(node.style) {
@@ -404,9 +405,8 @@ TOCBuilder.prototype.loadDB = function(callback) {
 		var title = toc.title || toc.name || toc.heading;
 		var name = toc.name || toc.heading;
 		var abbrev = toc.abbrev || toc.name || toc.heading;
-		if (toc.lastChapter == null) toc.lastChapter = 0; // ERV does not have chapters in FRT and GLO
-		var values = [ toc.code, heading, title, name, abbrev, toc.lastChapter, 
-			toc.priorBook, toc.nextBook, toc.chapterRowId ];
+		var values = [ toc.code, heading, title, name, abbrev, toc.chapters.join(","), 
+			toc.priorBook, toc.nextBook ];
 		array.push(values);
 	}
 	this.adapter.load(array, function(err) {
@@ -1777,22 +1777,26 @@ TOC.prototype.toJSON = function() {
 };/**
 * This class holds the table of contents data each book of the Bible, or whatever books were loaded.
 */
-function TOCBook(code, heading, title, name, abbrev, lastChapter, priorBook, nextBook, chapterRowId) {
+function TOCBook(code, heading, title, name, abbrev, chapters, priorBook, nextBook) {
 	this.code = code || null;
 	this.heading = heading || null;
 	this.title = title || null;
 	this.name = name || null;
 	this.abbrev = abbrev || null;
-	this.lastChapter = lastChapter || null;
+	this.chapters = chapters || [];
 	this.priorBook = priorBook || null;
 	this.nextBook = nextBook || null; // do not want undefined in database
-	this.chapterRowId = chapterRowId || null;
-	if (lastChapter) {
-		Object.freeze(this);
-	} else {
-		Object.seal(this);
-	}
-}/**
+	//if (lastChapter) {
+	//	Object.freeze(this);
+	//} else {
+	Object.seal(this);
+	//}
+}
+
+//TOCBook.prototype.lastChapter = function() {
+//	return chapters.last;
+//};
+/**
 * This class holds the concordance of the entire Bible, or whatever part of the Bible was available.
 */
 function Concordance(adapter, wordsLookAhead) {
@@ -2498,10 +2502,9 @@ TableContentsAdapter.prototype.create = function(callback) {
     	'title text not null, ' +
     	'name text not null, ' +
     	'abbrev text not null, ' +
-		'lastChapter integer not null, ' +
+		'chapters text not null, ' +
 		'priorBook text null, ' +
-		'nextBook text null, ' +
-		'chapterRowId integer not null)';
+		'nextBook text null)';
 	this.database.executeDDL(statement, function(err) {
 		if (err instanceof IOError) {
 			callback(err);
@@ -2511,9 +2514,8 @@ TableContentsAdapter.prototype.create = function(callback) {
 	});
 };
 TableContentsAdapter.prototype.load = function(array, callback) {
-	var statement = 'insert into tableContents(code, heading, title, name, abbrev, lastChapter, priorBook, nextBook, chapterRowId) ' +
-		'values (?,?,?,?,?,?,?,?,?)';
-	//this.database.manyExecuteDML(statement, array, function(count) {
+	var statement = 'insert into tableContents(code, heading, title, name, abbrev, chapters, priorBook, nextBook) ' +
+		'values (?,?,?,?,?,?,?,?)';
 	this.database.bulkExecuteDML(statement, array, function(count) {
 		if (count instanceof IOError) {
 			callback(count);
@@ -2524,7 +2526,7 @@ TableContentsAdapter.prototype.load = function(array, callback) {
 	});
 };
 TableContentsAdapter.prototype.selectAll = function(callback) {
-	var statement = 'select code, heading, title, name, abbrev, lastChapter, priorBook, nextBook, chapterRowId ' +
+	var statement = 'select code, heading, title, name, abbrev, chapters, priorBook, nextBook ' +
 		'from tableContents order by rowid';
 	this.database.select(statement, [], function(results) {
 		if (results instanceof IOError) {
@@ -2534,7 +2536,7 @@ TableContentsAdapter.prototype.selectAll = function(callback) {
 			for (var i=0; i<results.rows.length; i++) {
 				var row = results.rows.item(i);
 				var tocBook = new TOCBook(row.code, row.heading, row.title, row.name, row.abbrev, 
-					row.lastChapter, row.priorBook, row.nextBook, row.chapterRowId);
+					row.chapters.join(","), row.priorBook, row.nextBook, row.chapterRowId);
 				array.push(tocBook);
 			}
 			callback(array);
