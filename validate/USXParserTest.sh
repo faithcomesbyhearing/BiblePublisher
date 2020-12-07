@@ -18,6 +18,6 @@ cat ../Library/model/usx/Cell.js >> temp.js
 cat ../Library/xml/XMLTokenizer.js >> temp.js
 cat ../Library/xml/USXParser.js >> temp.js
 cat js/USXParserTest.js >> temp.js
-node temp.js $1
+node temp.js $*
 
 

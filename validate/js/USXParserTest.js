@@ -1,5 +1,4 @@
 
-var WEB_BIBLE_PATH = "../../DBL/2current/";
 
 var fs = require("fs");
 
@@ -46,14 +45,14 @@ function symmetricTest(fullPath, outPath, filename, callback) {
 	}
 }
 
-if (process.argv.length < 3) {
-	console.log('Usage: USXParserTest.sh  version');
+if (process.argv.length < 5) {
+	console.log('Usage: USXParserTest.sh  inputDir  outputDir  bibleId');
 	process.exit(1);
 }
 var parser = new USXParser();
-const outPath = 'output/' + process.argv[2] + '/usx';
+const outPath = 'output/' + process.argv[4] + '/usx';
 ensureDirectory(outPath, function() {
-	var fullPath = WEB_BIBLE_PATH + process.argv[2] + '/USX_1/';
+	var fullPath = process.argv[2]
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, function() {
 		console.log('USXParserTest DONE');
