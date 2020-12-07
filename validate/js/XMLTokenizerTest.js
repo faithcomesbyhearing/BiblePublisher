@@ -2,7 +2,6 @@
 * This file is the unit test of XMLTokenizer
 */
 var fs = require("fs");
-var WEB_BIBLE_PATH = "../../DBL/2current/";
 
 function XMLSerializer(spaceOption) {
 	this.result = [];
@@ -96,32 +95,32 @@ function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
 					if (err) {
 						console.log('Diff Error', JSON.stringify(err));
 					}
-					console.log('STDOUT', stdout);
-					console.log('STDERR', stderr);
+					//console.log('STDOUT', stdout);
+					//console.log('STDERR', stderr);
 					callback();
 				});
 			});
 		});
 	}
 }
-if (process.argv.length < 3) {
+if (process.argv.length < 5) {
 	// when optional parameter nospace is used empty elements have no space.
-	console.log('Usage: XMLTokenizerTest.sh  version  [nospace]');
+	console.log('Usage: XMLTokenizerTest.sh  inputDir  outputDir  bibleId  [nospace]');
 	process.exit(1);
 }
 var spaceOption = null;
-if (process.argv.length > 3) {
-	if (process.argv[3] === 'nospace') {
-		spaceOption = process.argv[3];
+if (process.argv.length > 5) {
+	if (process.argv[5] === 'nospace') {
+		spaceOption = process.argv[5];
 	} else {
-		console.log('Usage: XMLTokenizerTest.sh  version  [nospace]');
+		console.log('Usage: XMLTokenizerTest.sh  inputDir  outputDir  bibleId  [nospace]');
 		process.exit(1);
 	}
 }
 
-const outPath = 'output/' + process.argv[2] + '/xml';
+const outPath = process.argv[3] + "/" + process.argv[4] + "/xml";
 ensureDirectory(outPath, function() {
-	var fullPath = WEB_BIBLE_PATH + process.argv[2] + '/USX_1/';
+	var fullPath = process.argv[2]
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, spaceOption, function() {
 		console.log('XMLTokenizerTest DONE');
