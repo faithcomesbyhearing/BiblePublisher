@@ -11,6 +11,10 @@ The Publisher program prepares Bible Text for publication in the BibleApp.  It e
 6. styleIndex: contains a summary list of the USFM/USX styles that occurred in the translation.
 7. charset: contains one row for each character that occurs.  It is used during validation.
 8. identity: will contain identity and version information after the file is validated
+
+## Compatibility
+
+This program has been tested with USX 2.0 and USX 2.5.  Development of a USX 3.0 version is in development.
    
 ## Running Publisher
 
@@ -31,6 +35,12 @@ The book sequence information can be picked up in anyone of three ways.
 1) If there is a DBL metadata.xml file, the program will use the sequence information in that file.  The metadata.xml file can be in the same directory as the .usx files, or it can be one directory above.  If it is anywhere else, it will be ignored.
 2) If there is no metadata.xml file, but .usx filenames contain a sequence numbers, such as 041MAT.usx, 042MRK.usx, then that number will be used to define the sequence.
 3) If there is neither a metadata.xml file, and there is no sequence numbers in the filenames, then the 66 book protestant Canon will be used to define the book sequence.
+
+## Installing node
+
+The Publisher program is written is node.  To install node on a Linux machine using the package installer do the following:
+
+	apt-get install node node-sqlite3
 
 ## Using Sqlite
 
