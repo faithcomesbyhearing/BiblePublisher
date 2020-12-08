@@ -48,11 +48,11 @@ files.forEach(file => {
     } else if (!file.startsWith(".")) {
     	console.log("INFO: Cannot process file %s.", file);
     }
-    if (usxCount == 0) {
-    	console.log("ERROR: There are no .usx files in inputDir '%s'.", inputDir);
-    	usageMessage();
-    }
 });
+if (usxCount == 0) {
+    console.log("ERROR: There are no .usx files in inputDir '%s'.", inputDir);
+    usageMessage();
+}
 if (!inputDir.endsWith("/")) {
 	inputDir += "/";
 }

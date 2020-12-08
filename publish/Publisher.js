@@ -345,7 +345,6 @@ function TOCBuilder(adapter) {
 	this.adapter = adapter;
 	this.toc = new TOC(adapter);
 	this.tocBook = null;
-	//this.chapterRowSum = 1; // Initial value for first Book
 	Object.seal(this);
 }
 TOCBuilder.prototype.readBook = function(usxRoot) {
@@ -361,14 +360,10 @@ TOCBuilder.prototype.readRecursively = function(node) {
 			}
 			this.tocBook = new TOCBook(node.code);
 			this.tocBook.priorBook = priorBook;
-			//this.tocBook.chapterRowId = this.chapterRowSum;
-			//this.chapterRowSum++; // add 1 for chapter 0.
 			this.toc.addBook(this.tocBook);
 			break;
 		case 'chapter':
-			//this.tocBook.lastChapter = node.number;
 			this.tocBook.chapters.push(node.number);
-			//this.chapterRowSum++;
 			break;
 		case 'para':
 			switch(node.style) {
@@ -1786,16 +1781,9 @@ function TOCBook(code, heading, title, name, abbrev, chapters, priorBook, nextBo
 	this.chapters = chapters || [];
 	this.priorBook = priorBook || null;
 	this.nextBook = nextBook || null; // do not want undefined in database
-	//if (lastChapter) {
-	//	Object.freeze(this);
-	//} else {
 	Object.seal(this);
-	//}
 }
 
-//TOCBook.prototype.lastChapter = function() {
-//	return chapters.last;
-//};
 /**
 * This class holds the concordance of the entire Bible, or whatever part of the Bible was available.
 */
@@ -2799,11 +2787,11 @@ files.forEach(file => {
     } else if (!file.startsWith(".")) {
     	console.log("INFO: Cannot process file %s.", file);
     }
-    if (usxCount == 0) {
-    	console.log("ERROR: There are no .usx files in inputDir '%s'.", inputDir);
-    	usageMessage();
-    }
 });
+if (usxCount == 0) {
+    console.log("ERROR: There are no .usx files in inputDir '%s'.", inputDir);
+    usageMessage();
+}
 if (!inputDir.endsWith("/")) {
 	inputDir += "/";
 }
