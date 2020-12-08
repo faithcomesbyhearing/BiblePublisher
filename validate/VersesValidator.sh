@@ -1,17 +1,17 @@
 #!/bin/sh
 
-if [ -z "$1" ]; then
-	echo "Usage: VersesValidator.sh VERSION";
+if [ -z "$3" ]; then
+	echo "Usage: VersesValidator.sh  dbDir  outputDir  bibleId";
 	exit 1;
 fi
 
-VERSION=$1;
-DB_PATH=../../DBL/3prepared/${VERSION}.db;
+VERSION=$3;
+DB_PATH=$1${VERSION}.db;
 
 echo ${DB_PATH}
 
 sqlite3 ${DB_PATH} <<END_SQL
-.output output/$1/verses.txt
+.output $2$3/verses.txt
 select reference, html from verses;
 END_SQL
 
@@ -20,7 +20,7 @@ cat ../Library/model/meta/Canon.js >> temp.js
 cat ../Library/xml/XMLTokenizer.js >> temp.js
 cat js/VersesValidator.js >> temp.js
 
-node temp.js $1
+node temp.js $*
 
-diff output/$1/chapters.txt output/$1/verses.txt
+diff $2$3/chapters.txt $2$3/verses.txt
 
