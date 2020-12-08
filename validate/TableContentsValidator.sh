@@ -1,16 +1,16 @@
 #!/bin/sh
 
-if [ -z "$1" ]; then
-	echo "Usage: TableContentsValidator.sh VERSION";
+if [ -z "$2" ]; then
+	echo "Usage: TableContentsValidator.sh  dbDir  bibleId";
 	exit 1;
 fi
 
-VERSION=$1;
-DB_PATH=../../DBL/3prepared/${VERSION}.db;
+VERSION=$2;
+DB_PATH=$1${VERSION}.db;
 
 sqlite3 ${DB_PATH} <<END_SQL
-select lastChapter + chapterRowId from tableContents where code='REV';
+SELECT rowId, code, heading, title, name, abbrev, chapters, priorBook, nextBook FROM tableContents
 END_SQL
 
-echo 'Response should be 1255'
+
 
