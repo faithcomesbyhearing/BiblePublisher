@@ -29,14 +29,14 @@ ConcordanceValidator.prototype.open = function(callback) {
 	});
 };
 
-ConcordanceValidator.prototype.normalize = function(callback) {
+ConcordanceValidator.prototype.normalize = function(outPath, callback) {
 	var that = this;
 	this.db.serialize(function() {
 		createValPunctuation(function(err) { if (err) that.fatalError(err, 'createValPunctuation'); });
 		normalizeConcordance(function(err, result) {
 			if (err) that.fatalError(err, 'normalizeConcordance');
 			var generatedText = that.generate(result);
-			that.outputFile(generatedText);
+			that.outputFile(outPath, generatedText);
 			that.compare(generatedText, function(err) {
 				if (err) that.fatalError(err, 'compare');
 				callback();
@@ -150,14 +150,14 @@ ConcordanceValidator.prototype.generate = function(concordance) {
 	console.log(result.length, 'Generated Verses');
 	return(result);
 };
-ConcordanceValidator.prototype.outputFile = function(generatedText) {
+ConcordanceValidator.prototype.outputFile = function(outPath, generatedText) {
 	var that = this;
 	var output = [];
 	for (var i=0; i<generatedText.length; i++) {
 		var row = generatedText[i];
 		output.push([row.book, row.chapter, row.verse, row.text].join(':'));
 	}
-	this.fs.writeFile('output/' + this.version + '/generated.txt', output.join('\n'), { encoding: 'utf8'}, function(err) {
+	this.fs.writeFile(outPath + this.version + '/generated.txt', output.join('\n'), { encoding: 'utf8'}, function(err) {
 		if (err) that.fatalError(err, 'write generated');
 		console.log('Generated Stored');
 	});
@@ -218,23 +218,23 @@ ConcordanceValidator.prototype.fatalError = function(err, source) {
 	process.exit(1);
 };
 
-var DB_PATH = '../../DBL/3prepared/';
 	
 if (process.argv.length < 3) {
-	console.log('Usage: ./Validator.sh VERSION');
+	console.log('Usage: ConcordanceValidator.sh  dbDir  outputDir  bibleId');
 	process.exit(1);
 } else {
 	var fs = require('fs');
-	var filename = DB_PATH + process.argv[2] + '.db';
+	var filename = process.argv[2] + process.argv[4] + '.db';
+	var outDir = process.argv[3]
 	console.log('Process ' + filename);
-	var val = new ConcordanceValidator(process.argv[2], filename);
+	var val = new ConcordanceValidator(process.argv[4], filename);
 	val.open(function(db) {
-		val.normalize(function() {
+		val.normalize(outDir, function() {
 			db.close(function() {
 				val.open(function(db) {
 					val.summary(function() {
 						db.close(function() {
-							console.log('DONE');
+							console.log('Concordance Validator DONE');
 						});
 					});
 				});
