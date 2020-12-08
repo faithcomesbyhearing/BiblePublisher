@@ -4,15 +4,12 @@
 * parses it, and generates USX files
 */
 var fs = require("fs");
-//var os = require("os");
-var HTML_BIBLE_PATH = "../../DBL/3prepared/";
-var USX_BIBLE_PATH = "../../DBL/2current/";
 var EOL = '\r\n';
 var END_EMPTY = ' />';
 
-function HTMLValidator(version) {
+function HTMLValidator(version, versionPath) {
 	this.version = version;
-	this.versionPath = HTML_BIBLE_PATH + version + '.db';
+	this.versionPath = versionPath;
 	this.parser = new HTMLParser();
 	this.db = null;
 }
@@ -26,14 +23,13 @@ HTMLValidator.prototype.open = function(callback) {
 		callback();
 	});
 };
-HTMLValidator.prototype.validateBook = function(outPath, index, books, callback) {
+HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books, callback) {
 	var that = this;
 	if (index >= books.length) {
 		callback();
 	} else {
 		var chapters = [];
 		var chapterNum = null;
-		console.log('doing ', books[index]);
 		var book = books[index].code;
 		this.db.all("SELECT html FROM chapters WHERE reference LIKE ?", book + '%', function(err, results) {
 			if (err) that.fatalError(err, 'select html');
@@ -41,10 +37,15 @@ HTMLValidator.prototype.validateBook = function(outPath, index, books, callback)
 				var node = that.parser.readBook(results[i].html);
 				chapters.push(node);
 			}
-			var usx = convertHTML2USX(chapters);
-			compareUSXFile(book, outPath, usx, function() {
-				that.validateBook(outPath, index + 1, books, callback);
-			});
+			if (chapters.length > 0) {
+				console.log('doing ', books[index]);
+				var usx = convertHTML2USX(chapters);
+				compareUSXFile(book, inputPath, outPath, usx, function() {
+					that.validateBook(inputPath, outPath, index + 1, books, callback);
+				});
+			} else {
+				that.validateBook(inputPath, outPath, index + 1, books, callback);
+			}
 		});
 	}
 	
@@ -219,9 +220,8 @@ HTMLValidator.prototype.validateBook = function(outPath, index, books, callback)
 	}
 	
 	
-	function compareUSXFile(book, outPath, data, callback) {
-		var inFile = USX_BIBLE_PATH + that.version + '/USX_1/' + book + '.usx';
-		//var outFile = OUT_BIBLE_PATH + book + '.usx';
+	function compareUSXFile(book, inputPath, outPath, data, callback) {
+		var inFile = inputPath + "/" + book + ".usx";
 		var outFile = outPath + '/' + book + '.usx';
 		fs.writeFile(outFile, data, { encoding: 'utf8'}, function(err) {
 			if (err) {
@@ -396,18 +396,20 @@ HTMLRoot.prototype.toHTML = function() {
 };
 
 
-if (process.argv.length < 3) {
-	console.log('Usage: HTMLValidator.sh  version');
+if (process.argv.length < 6) {
+	console.log('Usage: HTMLValidator.sh  inputDir  dbDir outputDir  bibleId');
 	process.exit(1);
 }
 
-const outPath = 'output/' + process.argv[2] + '/html';
+const outPath = process.argv[4] + process.argv[5] + '/html';
 ensureDirectory(outPath, function() {
-	var version = process.argv[2];
-	var htmlValidator = new HTMLValidator(version);
+	var version = process.argv[5];
+	var versionPath = process.argv[3] + version + '.db';
+	var htmlValidator = new HTMLValidator(version, versionPath);
 	htmlValidator.open(function() {
+		var inputPath = process.argv[2]
 		var canon = new Canon();
-		htmlValidator.validateBook(outPath, 0, canon.books, function() {
+		htmlValidator.validateBook(inputPath, outPath, 0, canon.books, function() {
 			htmlValidator.completed();
 			console.log('HTMLValidator DONE');
 		});
