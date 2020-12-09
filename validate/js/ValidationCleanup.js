@@ -57,16 +57,14 @@ ValidationCleanup.prototype.fatalError = function(err, source) {
 	process.exit(1);
 };
 
-var VALID_PATH = '../../DBL/3prepared/';
-var READY_PATH = '../../DBL/4validated/';
 	
-if (process.argv.length < 3) {
-	console.log('Usage: ./ValidationCleanup.sh VERSION');
+if (process.argv.length < 5) {
+	console.log('Usage: ValidationCleanup.sh  dbDir  dbOutDir  bibleId');
 	process.exit(1);
 } else {
 	var fs = require('fs');
-	var contents = fs.readFileSync(VALID_PATH + process.argv[2] + '.db');
-	var filename = READY_PATH + process.argv[2] + '.db';
+	var contents = fs.readFileSync(process.argv[2] + process.argv[4] + '.db');
+	var filename = process.argv[3] + process.argv[4] + '.db';
 	fs.writeFileSync(filename, contents);
 	console.log('Process ' + filename);
 	var val = new ValidationCleanup(filename);
