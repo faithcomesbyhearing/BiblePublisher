@@ -1,8 +1,7 @@
 /**
-* This program executes all validations for all versions, or all validations
-* for a specific version.
+* This program executes all validations for a specific version.
 * It runs each test, saves the stdout results to a file, and then compares
-* the results of each stdout to a previously save result.  It there is any difference,
+* the results of each stdout to a previously saved result.  It there is any difference,
 * it stops and reports the difference.  Otherwise, it prints the 
 */
 
@@ -17,32 +16,37 @@
 * 3. change diff to diff -w to accommodate leading spaces in book, chapter, para and verse empty nodes
 */
 
+if (process.argv.length < 6) {
+	console.log('Usage: TestFramework.sh  inputDir  dbDir outputDir  bibleId');
+	process.exit(1);
+}
+
 const programs = ['XMLTokenizerTest', 'USXParserTest', 'HTMLValidator', 'StyleUseValidator', 'VersesValidator', 'TableContentsValidator', 
-				'ConcordanceValidator', 'ValidationCleanup', 'VersionDiff'];
-var versions = ['ARBVDPD', 
-	'ERV-ARB', 'ERV-AWA', 'ERV-BEN', 'ERV-BUL', 'ERV-CMN', 'ERV-ENG', 'ERV-HIN', 'ERV-HRV', 'ERV-HUN', 'ERV-IND', 'ERV-KAN', 'ERV-MAR', 'ERV-ORI', 
-	'ERV-NEP','ERV-PAN', 'ERV-POR', 
-	'ERV-RUS', 'ERV-SPA', 'ERV-SRP', 
-	'ERV-TAM', 'ERV-THA', 'ERV-UKR', 'ERV-URD', 'ERV-VIE', 
-	'KJVPD', 'NMV', 'WEB'];
+				'ConcordanceValidator', 'ValidationCleanup', 'IdentityTable'];
+//var versions = ['ARBVDPD', 
+//	'ERV-ARB', 'ERV-AWA', 'ERV-BEN', 'ERV-BUL', 'ERV-CMN', 'ERV-ENG', 'ERV-HIN', 'ERV-HRV', 'ERV-HUN', 'ERV-IND', 'ERV-KAN', 'ERV-MAR', 'ERV-ORI', 
+//	'ERV-NEP','ERV-PAN', 'ERV-POR', 
+//	'ERV-RUS', 'ERV-SPA', 'ERV-SRP', 
+//	'ERV-TAM', 'ERV-THA', 'ERV-UKR', 'ERV-URD', 'ERV-VIE', 
+//	'KJVPD', 'NMV', 'WEB'];
 
 const fs = require('fs');
 const child = require('child_process');
 
-if (process.argv[2] !== 'ALL') {
-	versions = [process.argv[2]];
-}
+//if (process.argv[2] !== 'ALL') {
+var versions = [process.argv[2]];
+//}
 executeNext(-1, 0);
 
 function executeNext(programIndex, versionIndex) {
 	if (++programIndex < programs.length) {
 		executeOne(programIndex, versionIndex);
-	} else {
-		programIndex = 0;
-		if (++versionIndex < versions.length) {
-			executeOne(programIndex, versionIndex);
-		}
-	}
+	//} else {
+	//	programIndex = 0;
+	//	if (++versionIndex < versions.length) {
+	//		executeOne(programIndex, versionIndex);
+	//	}
+	//}
 }
 
 function executeOne(programIndex, versionIndex) {
@@ -98,3 +102,5 @@ function errorOutput(description, diffOut, execOut) {
 	console.log(description, diffOut);
 	process.exit(1);
 }
+
+
