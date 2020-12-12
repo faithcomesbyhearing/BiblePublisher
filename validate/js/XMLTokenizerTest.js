@@ -63,7 +63,7 @@ function testOne(fullPath, outPath, files, index, spaceOption, callback) {
 	}
 }
 function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
-	if (filename.substr(0, 1) === '.') {
+	if (filename.substr(0, 1) === '.' || !filename.endsWith(".usx")) {
 		callback();
 	} else {
 		var inFile = fullPath + filename;
@@ -83,6 +83,9 @@ function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
 				count++;
 			};
 			var result = writer.close();
+			if (spaceOption == "nospace") {
+				result += "\n";
+			}
 			var outFile = outPath + '/' + filename;
 			fs.writeFile(outFile, result, { encoding: 'utf8'}, function(err) {
 				if (err) {
@@ -93,10 +96,10 @@ function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
 				var proc = require('child_process');
 				proc.exec('diff ' + inFile + ' ' + outFile, { encoding: 'utf8' }, function(err, stdout, stderr) {
 					if (err) {
-						console.log('Diff Error', JSON.stringify(err));
+						console.log('STDOUT', stdout);
+						//console.log('STDERR', stderr);
+						//console.log('Diff Error', JSON.stringify(err));
 					}
-					//console.log('STDOUT', stdout);
-					//console.log('STDERR', stderr);
 					callback();
 				});
 			});
@@ -121,6 +124,9 @@ if (process.argv.length > 5) {
 const outPath = process.argv[3] + "/" + process.argv[4] + "/xml";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
+	if (!fullPath.endsWith("/")) {
+		fullPath += "/";
+	}
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, spaceOption, function() {
 		console.log('XMLTokenizerTest DONE');
