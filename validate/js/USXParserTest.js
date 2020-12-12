@@ -13,11 +13,10 @@ function testOne(fullPath, outPath, files, index, callback) {
 	}
 }
 function symmetricTest(fullPath, outPath, filename, callback) {
-	if (filename.substr(0, 1) === '.') {
+	if (filename.substr(0, 1) === '.' || !filename.toLowerCase().endsWith(".usx")) {
 		callback();
 	} else {
 		var bookCode = filename.substring(0, 3);
-		console.log(bookCode, filename);
 		var inFile = fullPath + filename;
 		fs.readFile(inFile, { encoding: 'utf8'}, function(err, data) {
 			if (err) {
@@ -31,13 +30,15 @@ function symmetricTest(fullPath, outPath, filename, callback) {
 					console.log('WRITE ERROR', JSON.stringify(err));
 					process.exit(1);
 				}
+				console.log("COMPARE", filename);
 				var proc = require('child_process');
 				proc.exec('diff ' + inFile + ' ' + outFile, { encoding: 'utf8' }, function(err, stdout, stderr) {
-					//if (err) {
-					//	console.log('Diff Error', JSON.stringify(err));
-					//}
-					console.log('DIFF', stdout);
-					console.log('ERR', stderr);
+					if (err) {
+						console.log("COMPARE", filename);
+						console.log('DIFF', stdout);
+						//console.log('ERR', stderr);
+						//console.log('Diff Error', JSON.stringify(err));
+					}
 					callback();
 				});
 			});
@@ -49,10 +50,14 @@ if (process.argv.length < 5) {
 	console.log('Usage: USXParserTest.sh  inputDir  outputDir  bibleId');
 	process.exit(1);
 }
+console.log("USXParserTest START");
 var parser = new USXParser();
-const outPath = 'output/' + process.argv[4] + '/usx';
+const outPath = process.argv[3] + "/" + process.argv[4] + "/usx";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
+	if (!fullPath.endsWith("/")) {
+		fullPath += "/"
+	}
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, function() {
 		console.log('USXParserTest DONE');

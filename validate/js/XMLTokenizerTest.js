@@ -63,7 +63,7 @@ function testOne(fullPath, outPath, files, index, spaceOption, callback) {
 	}
 }
 function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
-	if (filename.substr(0, 1) === '.' || !filename.endsWith(".usx")) {
+	if (filename.substr(0, 1) === '.' || !filename.toLowerCase().endsWith(".usx")) {
 		callback();
 	} else {
 		var inFile = fullPath + filename;
@@ -92,10 +92,11 @@ function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
 					console.log('WRITE ERROR', JSON.stringify(err));
 					process.exit(1);
 				}
-				console.log('COMPARE ', filename);
+				//console.log('COMPARE ', filename);
 				var proc = require('child_process');
 				proc.exec('diff ' + inFile + ' ' + outFile, { encoding: 'utf8' }, function(err, stdout, stderr) {
 					if (err) {
+						console.log('COMPARE ', filename);
 						console.log('STDOUT', stdout);
 						//console.log('STDERR', stderr);
 						//console.log('Diff Error', JSON.stringify(err));
@@ -121,6 +122,7 @@ if (process.argv.length > 5) {
 	}
 }
 
+console.log('XMLTokenizerTest START');
 const outPath = process.argv[3] + "/" + process.argv[4] + "/xml";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
