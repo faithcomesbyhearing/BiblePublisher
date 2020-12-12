@@ -4,6 +4,8 @@
 function Chapter(node) {
 	this.number = node.number;
 	this.style = node.style;
+	this.sid = node.sid;
+	this.eid = node.eid;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	Object.seal(this);
@@ -11,7 +13,15 @@ function Chapter(node) {
 Chapter.prototype.tagName = 'chapter';
 Chapter.prototype.openElement = function() {
 	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	return('<chapter number="' + this.number + '" style="' + this.style + elementEnd);
+	if (this.sid) {
+		return('<chapter number="' + this.number + '" style="' + this.style +  '" sid="' + this.sid + elementEnd);
+	} else if (this.number) {
+		return('<chapter number="' + this.number + '" style="' + this.style + elementEnd);		
+	} else if (this.eid) {
+		return('<chapter eid="' + this.eid + elementEnd);		
+	} else {
+		sys.exit(1);
+	}
 };
 Chapter.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</chapter>');

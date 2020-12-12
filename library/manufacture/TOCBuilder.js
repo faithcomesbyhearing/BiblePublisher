@@ -24,7 +24,9 @@ TOCBuilder.prototype.readRecursively = function(node) {
 			this.toc.addBook(this.tocBook);
 			break;
 		case 'chapter':
-			this.tocBook.chapters.push(node.number);
+			if (node.number) {
+				this.tocBook.chapters.push(node.number);
+			}
 			break;
 		case 'para':
 			switch(node.style) {

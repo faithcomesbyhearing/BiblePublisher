@@ -21,9 +21,11 @@ ChapterBuilder.prototype.readBook = function(usxRoot) {
 				bookCode = childNode.code;
 				break;
 			case 'chapter':
-				this.chapters.push({bookCode: bookCode, chapterNum: chapterNum, usxTree: oneChapter});
-				oneChapter = new USX({ version: usxRoot.version });
-				chapterNum = childNode.number;
+				if (!childNode.eid) {
+					this.chapters.push({bookCode: bookCode, chapterNum: chapterNum, usxTree: oneChapter});
+					oneChapter = new USX({ version: usxRoot.version });
+					chapterNum = childNode.number;
+				}	
 				break;
 		}
 		if (priorChildNode) oneChapter.addChild(priorChildNode);

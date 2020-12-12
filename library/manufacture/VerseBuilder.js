@@ -60,11 +60,14 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				}
 				break;
 			case 'verse':
-				if (that.oneVerse) {
-					that.breakList.push(that.oneVerse);
+				if (!verseUSX.eid) {
+					if (that.oneVerse) {
+						that.breakList.push(that.oneVerse);
+					}
+					var versionNumber = getVersion(verseUSX);
+					that.oneVerse = new USX({ version: versionNumber });
+					that.oneVerse.addChild(verseUSX);
 				}
-				that.oneVerse = new USX({ version: 2.0 });
-				that.oneVerse.addChild(verseUSX);
 				break;
 			case 'char':
 			case 'text':
@@ -90,5 +93,12 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				scanRecursively(node.children[i]);
 			}
 		}
+	}
+	function getVersion(verseUSX) {
+		var nodeUSX = verseUSX;
+		while(nodeUSX.usxParent) {
+			nodeUSX = nodeUSX.usxParent;
+		}
+		return nodeUSX.version;
 	}
 };

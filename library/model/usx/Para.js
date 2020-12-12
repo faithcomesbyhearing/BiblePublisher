@@ -3,6 +3,7 @@
 */
 function Para(node) {
 	this.style = node.style;
+	this.vid = node.vid;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	this.children = []; // contains verse | note | char | text
@@ -15,7 +16,11 @@ Para.prototype.addChild = function(node) {
 };
 Para.prototype.openElement = function() {
 	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	return('<para style="' + this.style + elementEnd);
+	if (this.vid) {
+		return('<para style="' + this.style + '" vid="' + this.vid + elementEnd);
+	} else {
+		return('<para style="' + this.style + elementEnd);
+	}
 };
 Para.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</para>');

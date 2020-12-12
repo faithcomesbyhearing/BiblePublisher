@@ -4,6 +4,8 @@
 function Verse(node) {
 	this.number = node.number;
 	this.style = node.style;
+	this.sid = node.sid;
+	this.eid = node.eid;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	Object.seal(this);
@@ -11,7 +13,15 @@ function Verse(node) {
 Verse.prototype.tagName = 'verse';
 Verse.prototype.openElement = function() {
 	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	return('<verse number="' + this.number + '" style="' + this.style + elementEnd);
+	if (this.sid) {
+		return('<verse number="' + this.number + '" style="' + this.style + '" sid="' + this.sid + elementEnd);
+	} else if (this.number) {
+		return('<verse number="' + this.number + '" style="' + this.style + elementEnd);
+	} else if (this.eid) {
+		return('<verse eid="' + this.eid + elementEnd);
+	} else {
+		sys.exit(1);
+	}
 };
 Verse.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</verse>');

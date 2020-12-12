@@ -211,9 +211,11 @@ ChapterBuilder.prototype.readBook = function(usxRoot) {
 				bookCode = childNode.code;
 				break;
 			case 'chapter':
-				this.chapters.push({bookCode: bookCode, chapterNum: chapterNum, usxTree: oneChapter});
-				oneChapter = new USX({ version: usxRoot.version });
-				chapterNum = childNode.number;
+				if (!childNode.eid) {
+					this.chapters.push({bookCode: bookCode, chapterNum: chapterNum, usxTree: oneChapter});
+					oneChapter = new USX({ version: usxRoot.version });
+					chapterNum = childNode.number;
+				}	
 				break;
 		}
 		if (priorChildNode) oneChapter.addChild(priorChildNode);
@@ -305,11 +307,14 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				}
 				break;
 			case 'verse':
-				if (that.oneVerse) {
-					that.breakList.push(that.oneVerse);
+				if (!verseUSX.eid) {
+					if (that.oneVerse) {
+						that.breakList.push(that.oneVerse);
+					}
+					var versionNumber = getVersion(verseUSX);
+					that.oneVerse = new USX({ version: versionNumber });
+					that.oneVerse.addChild(verseUSX);
 				}
-				that.oneVerse = new USX({ version: 2.0 });
-				that.oneVerse.addChild(verseUSX);
 				break;
 			case 'char':
 			case 'text':
@@ -335,6 +340,13 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				scanRecursively(node.children[i]);
 			}
 		}
+	}
+	function getVersion(verseUSX) {
+		var nodeUSX = verseUSX;
+		while(nodeUSX.usxParent) {
+			nodeUSX = nodeUSX.usxParent;
+		}
+		return nodeUSX.version;
 	}
 };
 /**
@@ -363,7 +375,9 @@ TOCBuilder.prototype.readRecursively = function(node) {
 			this.toc.addBook(this.tocBook);
 			break;
 		case 'chapter':
-			this.tocBook.chapters.push(node.number);
+			if (node.number) {
+				this.tocBook.chapters.push(node.number);
+			}
 			break;
 		case 'para':
 			switch(node.style) {
@@ -944,6 +958,8 @@ Cell.prototype.toDOM = function(parentNode) {
 function Chapter(node) {
 	this.number = node.number;
 	this.style = node.style;
+	this.sid = node.sid;
+	this.eid = node.eid;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	Object.seal(this);
@@ -951,7 +967,15 @@ function Chapter(node) {
 Chapter.prototype.tagName = 'chapter';
 Chapter.prototype.openElement = function() {
 	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	return('<chapter number="' + this.number + '" style="' + this.style + elementEnd);
+	if (this.sid) {
+		return('<chapter number="' + this.number + '" style="' + this.style +  '" sid="' + this.sid + elementEnd);
+	} else if (this.number) {
+		return('<chapter number="' + this.number + '" style="' + this.style + elementEnd);		
+	} else if (this.eid) {
+		return('<chapter eid="' + this.eid + elementEnd);		
+	} else {
+		sys.exit(1);
+	}
 };
 Chapter.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</chapter>');
@@ -973,6 +997,7 @@ Chapter.prototype.toDOM = function(parentNode, bookCode, localizeNumber) {
 */
 function Para(node) {
 	this.style = node.style;
+	this.vid = node.vid;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	this.children = []; // contains verse | note | char | text
@@ -985,7 +1010,11 @@ Para.prototype.addChild = function(node) {
 };
 Para.prototype.openElement = function() {
 	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	return('<para style="' + this.style + elementEnd);
+	if (this.vid) {
+		return('<para style="' + this.style + '" vid="' + this.vid + elementEnd);
+	} else {
+		return('<para style="' + this.style + elementEnd);
+	}
 };
 Para.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</para>');
@@ -1086,6 +1115,8 @@ Table.prototype.toDOM = function(parentNode) {
 function Verse(node) {
 	this.number = node.number;
 	this.style = node.style;
+	this.sid = node.sid;
+	this.eid = node.eid;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	Object.seal(this);
@@ -1093,7 +1124,15 @@ function Verse(node) {
 Verse.prototype.tagName = 'verse';
 Verse.prototype.openElement = function() {
 	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	return('<verse number="' + this.number + '" style="' + this.style + elementEnd);
+	if (this.sid) {
+		return('<verse number="' + this.number + '" style="' + this.style + '" sid="' + this.sid + elementEnd);
+	} else if (this.number) {
+		return('<verse number="' + this.number + '" style="' + this.style + elementEnd);
+	} else if (this.eid) {
+		return('<verse eid="' + this.eid + elementEnd);
+	} else {
+		sys.exit(1);
+	}
 };
 Verse.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</verse>');
