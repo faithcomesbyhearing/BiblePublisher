@@ -735,17 +735,21 @@ DOMBuilder.prototype.readRecursively = function(domParent, node) {
 			domNode = node.toDOM(domParent);
 			break;
 		case 'chapter':
-			this.chapter = node.number;
-			domParent.setAttribute('id', this.bookCode + ':' + this.chapter);
-			this.noteNum = 0;
-			domNode = node.toDOM(domParent, this.bookCode, this.localizeNumber);
+			if (node.number) {
+				this.chapter = node.number;
+				domParent.setAttribute('id', this.bookCode + ':' + this.chapter);
+				this.noteNum = 0;
+				domNode = node.toDOM(domParent, this.bookCode, this.localizeNumber);
+			}
 			break;
 		case 'para':
 			domNode = node.toDOM(domParent);
 			break;
 		case 'verse':
-			this.verse = node.number;
-			domNode = node.toDOM(domParent, this.bookCode, this.chapter, this.localizeNumber);
+			if (node.number) {
+				this.verse = node.number;
+				domNode = node.toDOM(domParent, this.bookCode, this.chapter, this.localizeNumber);
+			}
 			break;
 		case 'text':
 			node.toDOM(domParent, this.bookCode, this.chapter);
