@@ -17,6 +17,7 @@ cat ../Library/model/usx/Row.js >> temp.js
 cat ../Library/model/usx/Cell.js >> temp.js
 cat ../Library/xml/XMLTokenizer.js >> temp.js
 cat ../Library/xml/USXParser.js >> temp.js
+cat js/USXFileCompare.js >> temp.js
 cat js/USXParserTest.js >> temp.js
 node temp.js $*
 
