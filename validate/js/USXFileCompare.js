@@ -39,6 +39,7 @@ function USXFileCompare(originalDir, generatedDir, filename) {
 				generated = generatedList[i];
 			}
 			original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
+			original = original.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
 			if (original != generated) {
 				results.push("Line " + i+3);
 				results.push("ACT: " + original);

@@ -17,7 +17,7 @@ HTMLValidator.prototype.open = function(callback) {
 	var that = this;
 	var sqlite3 = require('sqlite3');
 	this.db = new sqlite3.Database(this.versionPath, sqlite3.OPEN_READWRITE, function(err) {
-		if (err) that.fatalError(err, 'openDatabase');
+		if (err) that.fatalError(err, 'openDatabase ' + this.versionPath);
 		//that.db.on('trace', function(sql) { console.log('DO ', sql); });
 		//that.db.on('profile', function(sql, ms) { console.log(ms, 'DONE', sql); });
 		callback();
@@ -40,7 +40,7 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 			if (chapters.length > 0) {
 				console.log('doing ', books[index]);
 				var usx = convertHTML2USX(chapters);
-				compareUSXFile(book, inputPath, outPath, usx, function() {
+				compareUSXFile(book, inputPath, outPath, usx, function(errorCount) {
 					that.validateBook(inputPath, outPath, index + 1, books, callback);
 				});
 			} else {
@@ -221,23 +221,14 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 	
 	
 	function compareUSXFile(book, inputPath, outPath, data, callback) {
-		var inFile = inputPath + "/" + book + ".usx";
 		var outFile = outPath + '/' + book + '.usx';
 		fs.writeFile(outFile, data, { encoding: 'utf8'}, function(err) {
 			if (err) {
-				//console.log('WRITE ERROR', JSON.stringify(err));
-				//process.exit(1);
 				that.fatalError(err, 'Write USX File');
 			}
-			var proc = require('child_process');
-			proc.exec('diff ' + inFile + ' ' + outFile, { encoding: 'utf8' }, function(err, stdout, stderr) {
-				if (err) {
-					console.log('Diff Error', JSON.stringify(err));
-				}
-				console.log('STDOUT', stdout);
-				console.log('STDERR', stderr);
-				callback();
-			});
+			const filename = book + ".usx";
+			const errorCount = USXFileCompare(inputPath, outPath, filename);
+			callback(errorCount);
 		});
 	}
 };
@@ -401,13 +392,18 @@ if (process.argv.length < 6) {
 	process.exit(1);
 }
 
-const outPath = process.argv[4] + process.argv[5] + '/html';
+console.log("HTMLValidator START");
+const outPath = process.argv[4] + "/" + process.argv[5] + '/html';
 ensureDirectory(outPath, function() {
 	var version = process.argv[5];
-	var versionPath = process.argv[3] + version + '.db';
+	var versionPath = process.argv[3] + "/" + version + '.db';
+	console.log(version, versionPath);
 	var htmlValidator = new HTMLValidator(version, versionPath);
 	htmlValidator.open(function() {
 		var inputPath = process.argv[2]
+		if (!inputPath.endsWith("/")) {
+			inputPath += "/";
+		}
 		var canon = new Canon();
 		htmlValidator.validateBook(inputPath, outPath, 0, canon.books, function() {
 			htmlValidator.completed();
