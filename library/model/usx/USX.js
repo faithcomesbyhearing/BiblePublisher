@@ -27,6 +27,7 @@ USX.prototype.toUSX = function() {
 };
 USX.prototype.toDOM = function(parentNode) {
 	var child = new DOMNode('section');
+	child.setAttribute("data-usx", this.version);
 	child.emptyElement = this.emptyElement;
 	parentNode.appendChild(child);
 	return(child);
