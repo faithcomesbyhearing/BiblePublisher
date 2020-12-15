@@ -12,8 +12,8 @@ function VersesValidator(version, versionPath) {
 	this.versionPath = versionPath;
 	this.fs = require('fs');
 	this.db = null;
-	var canon = new Canon();
-	this.bookMap = canon.sequenceMap();
+	//var canon = new Canon();
+	//this.bookMap = canon.sequenceMap();
 	Object.seal(this);
 }
 VersesValidator.prototype.open = function(callback) {
@@ -40,7 +40,7 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 				var row = results[i];
 				parseChapter(row.reference, row.html);
 			}
-			that.fs.writeFileSync(outPath + that.version + '/chapters.txt', bible.join(''), "utf8");
+			that.fs.writeFileSync(outPath + "/" + that.version + '/chapters.txt', bible.join(''), "utf8");
 		}
 	});
 	
@@ -147,11 +147,14 @@ if (process.argv.length < 5) {
 	console.log('Usage: ./VersesValidator.sh  dbDir  outputDir  bibleId');
 	process.exit(1);
 } else {
-	var dbFilename = process.argv[2] + process.argv[4] + ".db";
+	var dbFilename = process.argv[2] + "/" + process.argv[4] + ".db";
 	console.log('Process ' + dbFilename);
 	var val = new VersesValidator(process.argv[4], dbFilename);
 	val.open(function() {
 		var outPath = process.argv[3]
+		if (! outPath.endsWith("/")) {
+			outPath += "/";
+		}
 		val.generateChaptersFile(outPath, function() {
 			val.completed();
 		});
