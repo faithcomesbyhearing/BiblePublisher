@@ -12,6 +12,11 @@ function HTMLValidator(version, versionPath) {
 	this.versionPath = versionPath;
 	this.parser = new HTMLParser();
 	this.db = null;
+	this.usxVersion = null;
+	this.usxVersionNum = 0;
+	this.bookId = null;
+	this.lastChapter = null;
+	Object.seal(this);
 }
 HTMLValidator.prototype.open = function(callback) {
 	var that = this;
@@ -39,7 +44,7 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 			}
 			if (chapters.length > 0) {
 				console.log('doing ', books[index]);
-				var usx = convertHTML2USX(chapters);
+				var usx = convertHTML2USX(book, chapters);
 				compareUSXFile(book, inputPath, outPath, usx, function(errorCount) {
 					that.validateBook(inputPath, outPath, index + 1, books, callback);
 				});
@@ -49,13 +54,18 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 		});
 	}
 	
-	function convertHTML2USX(chapters) {
+	function convertHTML2USX(book, chapters) {
 		var usx = [];
+		that.usxVersion = chapters[0].children[0]['data-usx'];
+		that.usxVersionNum = parseFloat(that.usxVersion);
 		usx.push(String.fromCharCode('0xFEFF'));
 		usx.push('<?xml version="1.0" encoding="utf-8"?>', EOL);
-		usx.push('<usx version="2.0">');
+		usx.push('<usx version="' + that.usxVersion + '">');
 		for (var i=0; i<chapters.length; i++) {
 			recurseOverHTML(usx, chapters[i]);
+		}
+		if (that.usxVersionNum >= 3.0) {
+			usx.push('<chapter eid="', book, ' ', that.lastChapter, '" />', EOL);
 		}
 		usx.push('</usx>');
 		return(usx.join(''));
@@ -78,7 +88,8 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 				// do nothing
 				break;
 			case 'article':
-				usx.push('<book code="', node.id, '" style="', node['class'], '"');
+				that.bookId = node.id;
+				usx.push('<book code="', that.bookId, '" style="', node['class'], '"');
 				if (node.emptyElement) {
 					usx.push(END_EMPTY);
 				} else {
@@ -90,10 +101,19 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 				break;
 			case 'section':
 				chapterNum = node.id.split(':')[1];
+				that.lastChapter = chapterNum;
 				break;
 			case 'p':
 				if (node['class'] === 'c') {
-					usx.push('<chapter number="', chapterNum, '" style="c"', END_EMPTY);
+					if (that.usxVersionNum >= 3.0) {
+						if (chapterNum > "1") {
+							var priorChapter = parseFloat(chapterNum) - 1;
+							usx.push('<chapter eid="', that.bookId + " " + priorChapter, '"', END_EMPTY, EOL);
+						}
+						usx.push('<chapter number="', chapterNum, '" style="c"', ' sid="' + that.bookId + " " + chapterNum, '"', END_EMPTY);
+					} else {
+						usx.push('<chapter number="', chapterNum, '" style="c"', END_EMPTY);
+					}
 					node.children = [];
 				} else if (node.emptyElement) {
 					usx.push('<para style="', node['class'], '"', END_EMPTY);
@@ -107,7 +127,12 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 			case 'span':
 				if (node['class'] === 'v') {
 					var parts = node.id.split(':');
-					usx.push('<verse number="', parts[2], '" style="', node['class'], '"', END_EMPTY);
+					if (that.usxVersionNum >= 3.0) {
+						var verseId = that.bookId + " " + chapterNum + ":" + parts[2];
+						usx.push('<verse number="', parts[2], '" style="', node['class'], '" sid="', verseId, '"', END_EMPTY);
+					} else {
+						usx.push('<verse number="', parts[2], '" style="', node['class'], '"', END_EMPTY);
+					}
 					node.children = [];
 				} else if (node['class'] === 'topf') {
 					usx.push('<note caller="', node.caller, '" style="f">');
@@ -152,7 +177,7 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 				}
 				break;
 			case 'wbr':
-				usx.push('<optbreak', END_EMPTY);
+				usx.push('<optbreak/>');
 				break;
 			case 'TEXT':
 				usx.push(node.text);
@@ -227,7 +252,7 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 				that.fatalError(err, 'Write USX File');
 			}
 			const filename = book + ".usx";
-			const errorCount = USXFileCompare(inputPath, outPath, filename);
+			const errorCount = USXFileCompare(inputPath, outPath, filename, "HTML");
 			callback(errorCount);
 		});
 	}
@@ -312,6 +337,7 @@ HTMLParser.prototype.readBook = function(data) {
 
 function HTMLElement(tagName) {
 	this.tagName = tagName;
+	this['data-usx'] = null;
 	this.id = null;
 	this['class'] = null;
 	this.caller = null;
@@ -338,6 +364,7 @@ HTMLElement.prototype.toHTML = function() {
 };
 HTMLElement.prototype.buildHTML = function(array, includeChildren) {
 	array.push(EOL, '<', this.tagName);
+	if (this['data-usx']) array.push(' data-usx="', this['data-usx'], '"');
 	if (this.id) array.push(' id="', this.id, '"');
 	if (this['class']) array.push(' class="', this['class'], '"');
 	if (this.caller) array.push(' caller="', this.caller, '"');

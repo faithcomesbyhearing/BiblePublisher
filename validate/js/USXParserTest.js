@@ -29,7 +29,7 @@ function symmetricTest(fullPath, outPath, filename, callback) {
 					console.log('WRITE ERROR', JSON.stringify(err));
 					process.exit(1);
 				}
-				const errorCount = USXFileCompare(fullPath, outPath, filename);
+				const errorCount = USXFileCompare(fullPath, outPath, filename, "USX");
 				callback(errorCount);
 			});
 		});
