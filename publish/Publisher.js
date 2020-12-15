@@ -255,6 +255,7 @@ function VerseBuilder(adapter, chapterBuilder) {
 	this.verses = [];
 	this.breakList = []; // temp used by breakChapterIntoVerses
 	this.oneVerse = null; // temp used by breakChapterIntoVerses
+	this.insideVerse = false; // temp used by breakChapterIntoVerses
 	this.scanResult = []; // temp used by extractVerseText
 	Object.seal(this); 
 }
@@ -307,7 +308,10 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				}
 				break;
 			case 'verse':
-				if (!verseUSX.eid) {
+				if (verseUSX.eid) {
+					that.insideVerse = false;
+				} else {
+					that.insideVerse = true;
 					if (that.oneVerse) {
 						that.breakList.push(that.oneVerse);
 					}
@@ -318,7 +322,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				break;
 			case 'char':
 			case 'text':
-				if (that.oneVerse) {
+				if (that.oneVerse && that.insideVerse) {
 					that.oneVerse.addChild(verseUSX);
 				}
 				break;
