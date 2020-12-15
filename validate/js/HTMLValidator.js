@@ -28,29 +28,26 @@ HTMLValidator.prototype.open = function(callback) {
 		callback();
 	});
 };
-HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books, callback) {
+HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files, callback) {
 	var that = this;
-	if (index >= books.length) {
+	if (index >= files.length) {
 		callback();
 	} else {
 		var chapters = [];
 		var chapterNum = null;
-		var book = books[index].code;
+		var file = files[index];
+		var book = file.split(".")[0].substr(-3);
 		this.db.all("SELECT html FROM chapters WHERE reference LIKE ?", book + '%', function(err, results) {
 			if (err) that.fatalError(err, 'select html');
 			for (var i=0; i<results.length; i++) {
 				var node = that.parser.readBook(results[i].html);
 				chapters.push(node);
 			}
-			if (chapters.length > 0) {
-				console.log('doing ', books[index]);
-				var usx = convertHTML2USX(book, chapters);
-				compareUSXFile(book, inputPath, outPath, usx, function(errorCount) {
-					that.validateBook(inputPath, outPath, index + 1, books, callback);
-				});
-			} else {
-				that.validateBook(inputPath, outPath, index + 1, books, callback);
-			}
+			//console.log('doing', book, file);
+			var usx = convertHTML2USX(book, chapters);
+			compareUSXFile(file, inputPath, outPath, usx, function(errorCount) {
+				that.validateBook(inputPath, outPath, index + 1, files, callback);
+			});
 		});
 	}
 	
@@ -245,13 +242,12 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, books
 	}
 	
 	
-	function compareUSXFile(book, inputPath, outPath, data, callback) {
-		var outFile = outPath + '/' + book + '.usx';
+	function compareUSXFile(filename, inputPath, outPath, data, callback) {
+		var outFile = outPath + '/' + filename;
 		fs.writeFile(outFile, data, { encoding: 'utf8'}, function(err) {
 			if (err) {
 				that.fatalError(err, 'Write USX File');
 			}
-			const filename = book + ".usx";
 			const errorCount = USXFileCompare(inputPath, outPath, filename, "HTML");
 			callback(errorCount);
 		});
@@ -431,8 +427,15 @@ ensureDirectory(outPath, function() {
 		if (!inputPath.endsWith("/")) {
 			inputPath += "/";
 		}
-		var canon = new Canon();
-		htmlValidator.validateBook(inputPath, outPath, 0, canon.books, function() {
+		var fs = require('fs');
+		const files = fs.readdirSync(inputPath);
+		var goodFiles = [];
+		for (var i=0; i<files.length; i++) {
+			if (! files[i].startsWith(".") && files[i].toLowerCase().endsWith(".usx")) {
+				goodFiles.push(files[i]);
+			}
+		}
+		htmlValidator.validateBook(inputPath, outPath, 0, goodFiles, function() {
 			htmlValidator.completed();
 			console.log('HTMLValidator DONE');
 		});

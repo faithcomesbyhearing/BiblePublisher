@@ -43,8 +43,8 @@ function USXFileCompare(originalDir, generatedDir, filename, testType) {
 			}
 			if (testType == "HTML") {
 				original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
-				original = original.replace(/<verse eid=\"[A-Z0-9 :]+\" \/>/g, '');
-				original = original.replace(/ vid=\"[A-Z0-9 :]+\"/g, '');
+				original = original.replace(/<verse eid=\"[A-Z0-9 :-]+\" \/>/g, '');
+				original = original.replace(/ vid=\"[A-Z0-9 :-]+\"/g, '');
 				//original = original.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
 			}
 			if (original != generated) {
