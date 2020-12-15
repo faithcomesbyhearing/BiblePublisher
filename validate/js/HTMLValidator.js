@@ -258,9 +258,7 @@ HTMLValidator.prototype.fatalError = function(err, source) {
 	process.exit(1);
 };
 HTMLValidator.prototype.completed = function() {
-	console.log('HTMLValidator COMPLETED');
 	this.db.close();
-	process.exit(0);
 };
 
 function HTMLParser() {
@@ -415,13 +413,13 @@ if (process.argv.length < 6) {
 	process.exit(1);
 }
 
-console.log("HTMLValidator START");
+const bibleId = process.argv[5];
+console.log(bibleId, "HTMLValidator START");
 const outPath = process.argv[4] + "/" + process.argv[5] + '/html';
 ensureDirectory(outPath, function() {
-	var version = process.argv[5];
-	var versionPath = process.argv[3] + "/" + version + '.db';
-	console.log(version, versionPath);
-	var htmlValidator = new HTMLValidator(version, versionPath);
+	var versionPath = process.argv[3] + "/" + bibleId + '.db';
+	//console.log(bibleId, versionPath);
+	var htmlValidator = new HTMLValidator(bibleId, versionPath);
 	htmlValidator.open(function() {
 		var inputPath = process.argv[2]
 		if (!inputPath.endsWith("/")) {
@@ -437,7 +435,7 @@ ensureDirectory(outPath, function() {
 		}
 		htmlValidator.validateBook(inputPath, outPath, 0, goodFiles, function() {
 			htmlValidator.completed();
-			console.log('HTMLValidator DONE');
+			console.log(bibleId, 'HTMLValidator DONE');
 		});
 	});
 });

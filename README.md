@@ -14,7 +14,7 @@ The Publisher program prepares Bible Text for publication in the BibleApp.  It e
 
 ## Compatibility
 
-This program has been tested with USX 2.0 and USX 2.5.  Development of a USX 3.0 version is in development.
+This program has been tested with USX 2.0, USX 2.5 and USX 3.0.
    
 ## Running Publisher
 

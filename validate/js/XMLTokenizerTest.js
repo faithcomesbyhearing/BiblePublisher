@@ -122,8 +122,9 @@ if (process.argv.length > 5) {
 	}
 }
 
-console.log('XMLTokenizerTest START');
-const outPath = process.argv[3] + "/" + process.argv[4] + "/xml";
+const bibleId = process.argv[4];
+console.log(bibleId, 'XMLTokenizerTest START');
+const outPath = process.argv[3] + "/" + bibleId + "/xml";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
 	if (!fullPath.endsWith("/")) {
@@ -131,7 +132,7 @@ ensureDirectory(outPath, function() {
 	}
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, spaceOption, function() {
-		console.log('XMLTokenizerTest DONE');
+		console.log(bibleId, 'XMLTokenizerTest DONE');
 	});
 });
 

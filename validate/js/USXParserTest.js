@@ -40,9 +40,10 @@ if (process.argv.length < 5) {
 	console.log('Usage: USXParserTest.sh  inputDir  outputDir  bibleId');
 	process.exit(1);
 }
-console.log("USXParserTest START");
+const bibleId = process.argv[4];
+console.log(bibleId, "USXParserTest START");
 var parser = new USXParser();
-const outPath = process.argv[3] + "/" + process.argv[4] + "/usx";
+const outPath = process.argv[3] + "/" + bibleId + "/usx";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
 	if (!fullPath.endsWith("/")) {
@@ -50,6 +51,6 @@ ensureDirectory(outPath, function() {
 	}
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, function() {
-		console.log('USXParserTest DONE');
+		console.log(bibleId, 'USXParserTest DONE');
 	});
 });

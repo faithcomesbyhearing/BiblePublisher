@@ -148,7 +148,6 @@ if (process.argv.length < 5) {
 	process.exit(1);
 } else {
 	var dbFilename = process.argv[2] + "/" + process.argv[4] + ".db";
-	console.log('Process ' + dbFilename);
 	var val = new VersesValidator(process.argv[4], dbFilename);
 	val.open(function() {
 		var outPath = process.argv[3]

@@ -6,7 +6,7 @@ if [ -z "$2" ]; then
 fi
 
 VERSION=$2;
-DB_PATH=$1${VERSION}.db;
+DB_PATH=$1/${VERSION}.db;
 
 sqlite3 ${DB_PATH} <<END_SQL
 SELECT rowId, code, heading, title, name, abbrev, chapters, priorBook, nextBook FROM tableContents

@@ -8,7 +8,7 @@ fi
 VERSION=$3;
 DB_PATH=$1/${VERSION}.db;
 
-echo ${DB_PATH}
+echo "${VERSION} VersesValidator START"
 
 sqlite3 ${DB_PATH} <<END_SQL
 .output $2/$3/verses.txt
@@ -24,4 +24,6 @@ node temp.js $*
 
 #diff -y $2/$3/chapters.txt $2/$3/verses.txt
 diff $2/$3/chapters.txt $2/$3/verses.txt
+
+echo "${VERSION} VersesValidator DONE"
 
