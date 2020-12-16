@@ -80,7 +80,7 @@ function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
 				type = reader.nextToken();
 				var value = reader.tokenValue();
 				writer.write(type, value);
-				count++;
+				//count++;
 			};
 			var result = writer.close();
 			if (spaceOption == "nospace") {
@@ -92,39 +92,32 @@ function symmetricTest(fullPath, outPath, filename, spaceOption, callback) {
 					console.log('WRITE ERROR', JSON.stringify(err));
 					process.exit(1);
 				}
-				//console.log('COMPARE ', filename);
-				var proc = require('child_process');
-				proc.exec('diff ' + inFile + ' ' + outFile, { encoding: 'utf8' }, function(err, stdout, stderr) {
-					if (err) {
-						console.log('COMPARE ', filename);
-						console.log('STDOUT', stdout);
-						//console.log('STDERR', stderr);
-						//console.log('Diff Error', JSON.stringify(err));
-					}
-					callback();
-				});
+				const errorCount = USXFileCompare(fullPath, outPath, filename, "USX");
+				callback(errorCount);
 			});
 		});
 	}
 }
-if (process.argv.length < 5) {
+if (process.argv.length < 6) {
 	// when optional parameter nospace is used empty elements have no space.
-	console.log('Usage: XMLTokenizerTest.sh  inputDir  outputDir  bibleId  [nospace]');
+	console.log('Usage: XMLTokenizerTest.sh  inputDir  dbDir  outputDir  bibleId  [nospace]');
 	process.exit(1);
 }
 var spaceOption = null;
-if (process.argv.length > 5) {
-	if (process.argv[5] === 'nospace') {
+if (process.argv.length > 6) {
+	if (process.argv[6] === 'nospace') {
 		spaceOption = process.argv[5];
 	} else {
-		console.log('Usage: XMLTokenizerTest.sh  inputDir  outputDir  bibleId  [nospace]');
+		console.log('Usage: XMLTokenizerTest.sh  inputDir  dbDir  outputDir  bibleId  [nospace]');
 		process.exit(1);
 	}
 }
 
-const bibleId = process.argv[4];
+const bibleId = process.argv[5];
 console.log(bibleId, 'XMLTokenizerTest START');
-const outPath = process.argv[3] + "/" + bibleId + "/xml";
+const dbDir = process.argv[3];
+ValidationAdapter.shared().open(bibleId, dbDir, "XMLTokenizerTest");
+const outPath = process.argv[4] + "/" + bibleId + "/xml";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
 	if (!fullPath.endsWith("/")) {
@@ -132,6 +125,7 @@ ensureDirectory(outPath, function() {
 	}
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, spaceOption, function() {
+		ValidationAdapter.shared().close();
 		console.log(bibleId, 'XMLTokenizerTest DONE');
 	});
 });

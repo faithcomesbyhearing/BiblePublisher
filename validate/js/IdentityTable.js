@@ -64,7 +64,7 @@ if (process.argv.length < 4) {
 
 const bibleId = process.argv[3];
 const filename = bibleId + ".db";
-const biblePath = process.argv[2] + filename;
+const biblePath = process.argv[2] + "/" + filename;
 const bibleVersion = "1.1";
 
 var identityTable = new IdentityTable();

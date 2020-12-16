@@ -40,6 +40,8 @@ function USXFileCompare(originalDir, generatedDir, filename, testType) {
 			}
 			if (testType == "USX") {
 				original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
+				original = original.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
+				generated = generated.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
 			}
 			if (testType == "HTML") {
 				original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
