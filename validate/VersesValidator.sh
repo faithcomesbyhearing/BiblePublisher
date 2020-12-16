@@ -16,7 +16,6 @@ select reference, html from verses;
 END_SQL
 
 echo \"use strict\"\; > temp.js
-#cat ../Library/model/meta/Canon.js >> temp.js
 cat ../Library/xml/XMLTokenizer.js >> temp.js
 cat js/VersesValidator.js >> temp.js
 

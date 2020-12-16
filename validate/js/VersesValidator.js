@@ -12,8 +12,6 @@ function VersesValidator(version, versionPath) {
 	this.versionPath = versionPath;
 	this.fs = require('fs');
 	this.db = null;
-	//var canon = new Canon();
-	//this.bookMap = canon.sequenceMap();
 	Object.seal(this);
 }
 VersesValidator.prototype.open = function(callback) {
@@ -45,11 +43,13 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 	});
 	
 	function parseChapter(reference, html) {
+		const ignoreSet = new Set(['v', 's', 'r', 's1', 's2']);
 		var reader = new XMLTokenizer(html);
 		var elementStack = [];
 		var element = null;
 		var attrName = null;
 		var verseId = null;
+		var clas = null;
 		while (tokenType !== XMLNodeType.END) {
 			var tokenType = reader.nextToken();
 			var tokenValue = reader.tokenValue();
@@ -77,16 +77,20 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 				case XMLNodeType.WHITESP:
 				case XMLNodeType.TEXT:
 					var currElement = elementStack[elementStack.length -1];
+					if (currElement['class']) {
+						clas = currElement['class'];
+					}
 					switch(currElement.tagName) {
 						case 'section':
 							verse.push(tokenValue);
 							break;
 						case 'p':
-							verse.push(tokenValue);
+							if (!ignoreSet.has(clas)) {
+								verse.push(tokenValue);
+							}
 							break;
 						case 'span':
-							var clas = currElement['class'];
-							if (clas !== 'v' && ! isAncestorFootnote(elementStack)) {
+							if (!ignoreSet.has(clas) && ! isAncestorFootnote(elementStack)) {
 								verse.push(tokenValue);
 							}
 							break;

@@ -56,8 +56,11 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				break;
 			case 'usx':
 			case 'para':
-				for (var i=0; i<verseUSX.children.length; i++) {
-					breakRecursively(verseUSX.children[i]);
+				var style = verseUSX.style;
+				if (style !== 's' && style != 's1' && style != 's2' && style != 's3' && style != 'r') {
+					for (var i=0; i<verseUSX.children.length; i++) {
+						breakRecursively(verseUSX.children[i]);
+					}
 				}
 				break;
 			case 'verse':
