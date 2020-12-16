@@ -43,11 +43,14 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 				var node = that.parser.readBook(results[i].html);
 				chapters.push(node);
 			}
-			//console.log('doing', book, file);
-			var usx = convertHTML2USX(book, chapters);
-			compareUSXFile(file, inputPath, outPath, usx, function(errorCount) {
-				that.validateBook(inputPath, outPath, index + 1, files, callback);
-			});
+			if (chapters.length > 0) {
+				var usx = convertHTML2USX(book, chapters);
+				compareUSXFile(file, inputPath, outPath, usx, function(errorCount) {
+					that.validateBook(inputPath, outPath, index + 1, files, callback);
+				});
+			} else {
+				that.validateBook(inputPath, outPath, index + 1, files, callback);				
+			}
 		});
 	}
 	
