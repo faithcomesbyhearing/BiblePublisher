@@ -63,6 +63,7 @@ if (process.argv.length < 4) {
 
 
 const bibleId = process.argv[3];
+console.log(bibleId, 'IdentityTable START');
 const filename = bibleId + ".db";
 const biblePath = process.argv[2] + "/" + filename;
 const bibleVersion = "1.1";
@@ -72,7 +73,7 @@ identityTable.open(biblePath, function(database) {
 	identityTable.createIdentity(database, function() {
 		identityTable.createNewIdentityRecord(database, bibleId, filename, bibleVersion, function() {
 			database.close();
-			console.log("IdentityTable Completed")
+			console.log(bibleId, "IdentityTable DONE");
 		});	
 	});
 });

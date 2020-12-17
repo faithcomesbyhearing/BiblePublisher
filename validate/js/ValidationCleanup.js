@@ -58,18 +58,17 @@ ValidationCleanup.prototype.fatalError = function(err, source) {
 };
 
 	
-if (process.argv.length < 5) {
-	console.log('Usage: ValidationCleanup.sh  dbDir  dbOutDir  bibleId');
+if (process.argv.length < 4) {
+	console.log('Usage: ValidationCleanup.sh  dbDir  bibleId');
 	process.exit(1);
 } else {
-	var fs = require('fs');
-	var contents = fs.readFileSync(process.argv[2] + process.argv[4] + '.db');
-	var filename = process.argv[3] + process.argv[4] + '.db';
-	fs.writeFileSync(filename, contents);
-	console.log('Process ' + filename);
+	const bibleId = process.argv[3];
+	var filename = process.argv[2] + '/' + bibleId + '.db';
+	console.log(bibleId, 'ValidationCleanup START');
 	var val = new ValidationCleanup(filename);
 	val.open(function() {
 		val.cleanup(function() {
+			console.log(bibleId, 'ValidationCleanup DONE');
 			process.exit(0);
 		});
 	});
