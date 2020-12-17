@@ -36,14 +36,16 @@ function symmetricTest(fullPath, outPath, filename, callback) {
 	}
 }
 
-if (process.argv.length < 5) {
-	console.log('Usage: USXParserTest.sh  inputDir  outputDir  bibleId');
+if (process.argv.length < 6) {
+	console.log('Usage: USXParserTest.sh  inputDir  dbDir  outputDir  bibleId');
 	process.exit(1);
 }
-const bibleId = process.argv[4];
+const bibleId = process.argv[5];
 console.log(bibleId, "USXParserTest START");
+const dbDir = process.argv[3];
+ValidationAdapter.shared().open(bibleId, dbDir, "USXParserTest");
 var parser = new USXParser();
-const outPath = process.argv[3] + "/" + bibleId + "/usx";
+const outPath = process.argv[4] + "/" + bibleId + "/usx";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
 	if (!fullPath.endsWith("/")) {
@@ -51,6 +53,8 @@ ensureDirectory(outPath, function() {
 	}
 	var files = fs.readdirSync(fullPath);
 	testOne(fullPath, outPath, files, 0, function() {
+		ValidationAdapter.shared().close();
 		console.log(bibleId, 'USXParserTest DONE');
 	});
 });
+

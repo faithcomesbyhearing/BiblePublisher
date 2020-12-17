@@ -418,6 +418,8 @@ if (process.argv.length < 6) {
 
 const bibleId = process.argv[5];
 console.log(bibleId, "HTMLValidator START");
+const dbDir = process.argv[3];
+ValidationAdapter.shared().open(bibleId, dbDir, "HTMLValidator");
 const outPath = process.argv[4] + "/" + process.argv[5] + '/html';
 ensureDirectory(outPath, function() {
 	var versionPath = process.argv[3] + "/" + bibleId + '.db';
@@ -438,6 +440,7 @@ ensureDirectory(outPath, function() {
 		}
 		htmlValidator.validateBook(inputPath, outPath, 0, goodFiles, function() {
 			htmlValidator.completed();
+			ValidationAdapter.shared().close();
 			console.log(bibleId, 'HTMLValidator DONE');
 		});
 	});
