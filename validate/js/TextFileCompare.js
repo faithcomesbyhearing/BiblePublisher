@@ -5,14 +5,6 @@ function TextFileCompare(originalFilename, generatedFilename, testType) {
 	const originalFile = openFile(originalFilename);
 	const generatedFile = openFile(generatedFilename);
 	compare(originalFile, generatedFile, testType);
-	//if (results.length > 0) {
-	//	console.log("COMPARE", filename);
-	//	for (var i=0; i<results.length; i++) {
-	//		console.log(results[i]);
-	//		ValidationAdapter.shared().error(filename, results[i]);
-	//	}
-	//}
-	//return results.length / 3;
 
 	function openFile(filePath) {
 		var fs = require("fs");
@@ -21,7 +13,6 @@ function TextFileCompare(originalFilename, generatedFilename, testType) {
 		return lines;
 	}
 	function compare(orginalList, generatedList, testType) {
-		var results = [];
 		const len = Math.max(orginalList.length, generatedList.length);
 		for (var i=0; i<len; i++) {
 			var original = "";
@@ -32,35 +23,18 @@ function TextFileCompare(originalFilename, generatedFilename, testType) {
 			if (generatedList.length > i) {
 				generated = generatedList[i];
 			}
-			//if (testType == "USX") {
-			//	original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
-			//	original = original.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
-			//	generated = generated.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
-			//}
-			//if (testType == "HTML") {
-			//	original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
-			//	original = original.replace(/<verse eid=\"[A-Z0-9 :-]+\" \/>/g, '');
-			//	original = original.replace(/ vid=\"[A-Z0-9 :-]+\"/g, '');
-			//	//original = original.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
-			//}
 			if (original != generated) {
 				var results = [];
 				results.push("Line " + i+3);
 				results.push("ACT: " + original);
 				results.push("GEN: " + generated);
-				console.log("COMPARE", filename);
-				for (var i=0; i<results.length; i++) {
-					console.log(results[i]);
+				for (var j=0; j<results.length; j++) {
+					console.log(results[j]);
 				}
-				ValidationAdapter.shared().error('verse', results.join('\n'));
+				ValidationAdapter.shared().error('verse', results.join('\n'), function() {});
 			}
 		}
-		//return results
 	}
 }
 
-//const originalDirectory = "/Volumes/FCBH/usx/2_5/PESNMV";
-//const generatedDirectory = "testOutput/PESNMV/usx";
-//var count = USXFileCompare(originalDirectory, generatedDirectory, "JHN.usx", "USX");
-//console.log(count);
 

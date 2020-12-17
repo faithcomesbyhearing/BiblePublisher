@@ -9,7 +9,7 @@ function USXFileCompare(originalDir, generatedDir, filename, testType) {
 		console.log("COMPARE", filename);
 		for (var i=0; i<results.length; i++) {
 			console.log(results[i]);
-			ValidationAdapter.shared().error(filename, results[i]);
+			ValidationAdapter.shared().error(filename, results[i], function() {});
 		}
 	}
 	return results.length / 3;
