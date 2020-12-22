@@ -1,12 +1,12 @@
 #!/bin/sh
 
-echo \"use strict\"\; > temp.js
-cat ../Library/util/Directory.js >> temp.js
-cat ../Library/xml/XMLTokenizer.js >> temp.js
-cat ../Library/io/ValidationAdapter.js >> temp.js
-cat js/USXFileCompare.js >> temp.js
-cat js/HTMLValidator.js >> temp.js
+echo \"use strict\"\; > HTML.js
+cat ../Library/util/Directory.js >> HTML.js
+cat ../Library/xml/XMLTokenizer.js >> HTML.js
+cat ../Library/io/ValidationAdapter.js >> HTML.js
+cat js/USXFileCompare.js >> HTML.js
+cat js/HTMLValidator.js >> HTML.js
 
-node temp.js $*
+node HTML.js $*
 
 

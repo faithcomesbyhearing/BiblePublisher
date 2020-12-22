@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo \"use strict\"\; > temp.js
-cat ../Library/model/meta/Canon.js >> temp.js
-cat js/ConcordanceValidator.js >> temp.js
+echo \"use strict\"\; > Concordance.js
+cat ../Library/model/meta/Canon.js >> Concordance.js
+cat js/ConcordanceValidator.js >> Concordance.js
 
-node temp.js $*
+node Concordance.js $*
