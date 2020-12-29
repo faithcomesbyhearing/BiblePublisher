@@ -198,6 +198,7 @@ class _ValidationAdapter {
 		this.program = null;
 		this.datetime = new Date().toISOString();
 		this.database = null;
+		this.errorCount = 0;
 		Object.seal(this);
 	}
 	open(bibleId, dbDir, program) {
@@ -217,21 +218,26 @@ class _ValidationAdapter {
 		});
 	}
 	error(book, message, callback) {
-		var bookCode = book.split('.')[0];
-		if (bookCode.length > 3) {
-			bookCode = bookCode.substr(-3);
+		this.errorCount += 1;
+		if (this.errorCount > 100) { // ERROR LIMIT
+			callback(0);
+		} else {
+			var bookCode = book.split('.')[0];
+			if (bookCode.length > 3) {
+				bookCode = bookCode.substr(-3);
+			}
+			const sql = "insert into validation(program, datetime, book, errors) values (?,?,?,?)";
+			const values = [this.program, this.datetime, book, message];
+			this.database.run(sql, values, function(err) {
+				if (err) throw new Error(err);
+				callback(1);
+			});
 		}
-		const sql = "insert into validation(program, datetime, book, errors) values (?,?,?,?)";
-		const values = [this.program, this.datetime, book, message];
-		this.database.run(sql, values, function(err) {
-			if (err) throw new Error(err);
-			callback(1);
-		});
 	}
 	close() {
 		var that = this;
-		const sql = "insert into validation(program, datetime, book, errors) values (?,?,'','DONE')";
-		const values = [this.program, this.datetime];
+		const sql = "insert into validation(program, datetime, book, errors) values (?,?,?,'DONE')";
+		const values = [this.program, this.datetime, this.errorCount];
 		this.database.run(sql, values, function(err) {
 			if (err) throw new Error(err);
 			that.database.close();
@@ -429,8 +435,8 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 							usx.push('<chapter eid="', that.bookId + " " + priorChapter, '"', END_EMPTY, EOL);
 						}
 						usx.push('<chapter number="', chapterNum, '" style="c"', ' sid="' + that.bookId + " " + chapterNum, '"', END_EMPTY);
-					} else {
-						usx.push('<chapter number="', chapterNum, '" style="c"', END_EMPTY);
+					//} else {
+					//	usx.push('<chapter number="', chapterNum, '" style="c"', END_EMPTY);
 					}
 					node.children = [];
 				} else if (node.emptyElement) {
