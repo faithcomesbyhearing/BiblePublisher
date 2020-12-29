@@ -28,7 +28,9 @@ VerseBuilder.prototype.loadDB = function(callback) {
 				verseNum = verseNum.replace(",", "-")
 				var verseHTML = extractVerseText(verseUSX);
 				var reference = chapObj.bookCode + ':' + chapObj.chapterNum + ':' + verseNum;
-				this.verses.push([ reference, verseUSX.toUSX(), verseHTML ]);		
+				if (verseNum) {
+					this.verses.push([ reference, verseUSX.toUSX(), verseHTML ]);
+				}	
 			}
 		}
 	}
