@@ -272,6 +272,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			for (var j=0; j<verseList.length; j++) {
 				var verseUSX = verseList[j];
 				var verseNum = verseUSX.children[0].number;
+				verseNum = verseNum.replace(",", "-")
 				var verseHTML = extractVerseText(verseUSX);
 				var reference = chapObj.bookCode + ':' + chapObj.chapterNum + ':' + verseNum;
 				this.verses.push([ reference, verseUSX.toUSX(), verseHTML ]);		
@@ -1138,12 +1139,10 @@ Verse.prototype.openElement = function() {
 	var elementEnd = (this.emptyElement) ? '" />' : '">';
 	if (this.sid) {
 		return('<verse number="' + this.number + '" style="' + this.style + '" sid="' + this.sid + elementEnd);
-	} else if (this.number) {
-		return('<verse number="' + this.number + '" style="' + this.style + elementEnd);
 	} else if (this.eid) {
 		return('<verse eid="' + this.eid + elementEnd);
 	} else {
-		sys.exit(1);
+		return('<verse number="' + this.number + '" style="' + this.style + elementEnd);
 	}
 };
 Verse.prototype.closeElement = function() {

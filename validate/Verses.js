@@ -303,7 +303,9 @@ VersesValidator.prototype.generateVersesFile = function(outPath, callback) {
 			var array = [];
 			for (var i=0; i<results.length; i++) {
 				var row = results[i];
-				array.push(row.reference + '|' + row.html + '\n');
+				if (row.html && row.html.length > 0) {
+					array.push(row.reference + '|' + row.html + '\n');
+				}
 			}
 			that.fs.writeFileSync(outPath + "/" + that.version + '/verses.txt', array.join(''), 'utf8');
 			callback();
@@ -364,7 +366,7 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 				case XMLNodeType.WHITESP:
 				case XMLNodeType.TEXT:
 					var currElement = elementStack[elementStack.length -1];
-					if (currElement['class']) {
+					if (currElement['class']) {  // && currElement.tagName == 'para') {
 						clas = currElement['class'];
 					}
 					switch(currElement.tagName) {
@@ -410,7 +412,8 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 	}
 	function outputVerse(verseId) {
 		//console.log('OUTPUT VERSE ***', verse.join(''));
-		if (verse.length > 0 && verseId) {
+		if (verse.length > 0 && verse.join('').trim().length > 0 && verseId) {
+			verseId = verseId.replace(",", "-");
 			chapter.push(verseId, '|', verse.join('').trim(), '\n');
 		}
 		verse = [];

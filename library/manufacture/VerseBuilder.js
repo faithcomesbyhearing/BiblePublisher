@@ -25,6 +25,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			for (var j=0; j<verseList.length; j++) {
 				var verseUSX = verseList[j];
 				var verseNum = verseUSX.children[0].number;
+				verseNum = verseNum.replace(",", "-")
 				var verseHTML = extractVerseText(verseUSX);
 				var reference = chapObj.bookCode + ':' + chapObj.chapterNum + ':' + verseNum;
 				this.verses.push([ reference, verseUSX.toUSX(), verseHTML ]);		
