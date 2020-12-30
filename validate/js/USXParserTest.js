@@ -45,7 +45,7 @@ console.log(bibleId, "USXParserTest START");
 const dbDir = process.argv[3];
 ValidationAdapter.shared().open(bibleId, dbDir, "USXParserTest");
 var parser = new USXParser();
-const outPath = process.argv[4] + "/" + bibleId + "/usx";
+const outPath = process.argv[4] + "/usx";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
 	if (!fullPath.endsWith("/")) {

@@ -3,13 +3,17 @@
 var fs = require('fs');
 var ensureDirectory = function(fullpath, callback) {
 	var path = fullpath.split('/');
+	if (path[0] === "") {
+		path.shift();
+		path[0] = "/" + path[0];
+	}
 	var dir = path.shift();
 	ensureDirPart(dir, path);
 	
 	function ensureDirPart(dir, path) {
 		fs.lstat(dir, function(err, stat) {
 			if (err) {
-				console.log('mkdir', dir);
+				//console.log('mkdir', dir);
 				fs.mkdirSync(dir);
 			}
 			var next = path.shift();
@@ -21,7 +25,13 @@ var ensureDirectory = function(fullpath, callback) {
 			}
 		});
 	}
-};/**
+};
+//ensureDirectory("/Volumes/FCBH/BiblePublisher/ENGWEB/output/xml", function() {
+//	ensureDirectory("BobTestDir", function() {
+//		console.log("Directory Created.")
+//	});
+//})
+/**
 * This class is the root object of a parsed USX document
 */
 function USX(node) {
@@ -1035,7 +1045,7 @@ console.log(bibleId, "USXParserTest START");
 const dbDir = process.argv[3];
 ValidationAdapter.shared().open(bibleId, dbDir, "USXParserTest");
 var parser = new USXParser();
-const outPath = process.argv[4] + "/" + bibleId + "/usx";
+const outPath = process.argv[4] + "/usx";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
 	if (!fullPath.endsWith("/")) {

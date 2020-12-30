@@ -3,13 +3,17 @@
 var fs = require('fs');
 var ensureDirectory = function(fullpath, callback) {
 	var path = fullpath.split('/');
+	if (path[0] === "") {
+		path.shift();
+		path[0] = "/" + path[0];
+	}
 	var dir = path.shift();
 	ensureDirPart(dir, path);
 	
 	function ensureDirPart(dir, path) {
 		fs.lstat(dir, function(err, stat) {
 			if (err) {
-				console.log('mkdir', dir);
+				//console.log('mkdir', dir);
 				fs.mkdirSync(dir);
 			}
 			var next = path.shift();
@@ -21,7 +25,13 @@ var ensureDirectory = function(fullpath, callback) {
 			}
 		});
 	}
-};/**
+};
+//ensureDirectory("/Volumes/FCBH/BiblePublisher/ENGWEB/output/xml", function() {
+//	ensureDirectory("BobTestDir", function() {
+//		console.log("Directory Created.")
+//	});
+//})
+/**
 * This class does a stream read of an XML string to return XML tokens and their token type.
 */
 var XMLNodeType = Object.freeze({ELE:'ele', ELE_OPEN:'ele-open', ATTR_NAME:'attr-name', ATTR_VALUE:'attr-value', ELE_END:'ele-end', 
@@ -435,8 +445,8 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 							usx.push('<chapter eid="', that.bookId + " " + priorChapter, '"', END_EMPTY, EOL);
 						}
 						usx.push('<chapter number="', chapterNum, '" style="c"', ' sid="' + that.bookId + " " + chapterNum, '"', END_EMPTY);
-					//} else {
-					//	usx.push('<chapter number="', chapterNum, '" style="c"', END_EMPTY);
+					} else {
+						usx.push('<chapter number="', chapterNum, '" style="c"', END_EMPTY);
 					}
 					node.children = [];
 				} else if (node.emptyElement) {
@@ -744,9 +754,10 @@ const bibleId = process.argv[5];
 console.log(bibleId, "HTMLValidator START");
 const dbDir = process.argv[3];
 ValidationAdapter.shared().open(bibleId, dbDir, "HTMLValidator");
-const outPath = process.argv[4] + "/" + process.argv[5] + '/html';
+const outPath = process.argv[4] + '/html';
 ensureDirectory(outPath, function() {
 	var versionPath = process.argv[3] + "/" + bibleId + '.db';
+	console.log("BibleDB", versionPath);
 	//console.log(bibleId, versionPath);
 	var htmlValidator = new HTMLValidator(bibleId, versionPath);
 	htmlValidator.open(function() {

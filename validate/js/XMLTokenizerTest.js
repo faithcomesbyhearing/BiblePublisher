@@ -117,7 +117,7 @@ const bibleId = process.argv[5];
 console.log(bibleId, 'XMLTokenizerTest START');
 const dbDir = process.argv[3];
 ValidationAdapter.shared().open(bibleId, dbDir, "XMLTokenizerTest");
-const outPath = process.argv[4] + "/" + bibleId + "/xml";
+const outPath = process.argv[4] + "/xml";
 ensureDirectory(outPath, function() {
 	var fullPath = process.argv[2]
 	if (!fullPath.endsWith("/")) {

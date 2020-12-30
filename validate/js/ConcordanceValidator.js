@@ -157,7 +157,7 @@ ConcordanceValidator.prototype.outputFile = function(outPath, generatedText) {
 		var row = generatedText[i];
 		output.push([row.book, row.chapter, row.verse, row.text].join(':'));
 	}
-	this.fs.writeFile(outPath + this.version + '/generated.txt', output.join('\n'), { encoding: 'utf8'}, function(err) {
+	this.fs.writeFile(outPath + '/generated.txt', output.join('\n'), { encoding: 'utf8'}, function(err) {
 		if (err) that.fatalError(err, 'write generated');
 		console.log('Generated Stored');
 	});
@@ -226,10 +226,7 @@ if (process.argv.length < 3) {
 	var fs = require('fs');
 	var filename = process.argv[2] + "/" + process.argv[4] + '.db';
 	var outDir = process.argv[3]
-	if (! outDir.endsWith("/")) {
-		outDir += "/";
-	}
-	console.log('Process ' + filename);
+	//console.log('Process ' + filename);
 	var val = new ConcordanceValidator(process.argv[4], filename);
 	val.open(function(db) {
 		val.normalize(outDir, function() {

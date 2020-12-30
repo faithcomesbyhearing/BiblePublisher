@@ -14,7 +14,7 @@ echo "${VERSION} StyleUseValidator START"
 sqlite3 ${DB_PATH} <<END_SQL
 select * from styleIndex where usage || '.' || style not in (select usage || '.' || style from styleUse) and style != 'undefined';
 select usage, style, count(*) from styleIndex where usage || '.' || style not in (select usage || '.' || style from styleUse) and style != 'undefined' group by usage, style;
-.output ${OUTPUT}/${VERSION}/styleUseUnfinished.txt
+.output ${OUTPUT}/styleUseUnfinished.txt
 select * from styleIndex where usage || '.' || style not in (select usage || '.' || style from styleUse) and style != 'undefined';
 select usage, style, count(*) from styleIndex where usage || '.' || style not in (select usage || '.' || style from styleUse) and style != 'undefined' group by usage, style;
 END_SQL

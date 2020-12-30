@@ -313,7 +313,7 @@ VersesValidator.prototype.generateVersesFile = function(outPath, callback) {
 					array.push(row.reference + '|' + row.html + '\n');
 				}
 			}
-			that.fs.writeFileSync(outPath + "/" + that.version + '/verses.txt', array.join(''), 'utf8');
+			that.fs.writeFileSync(outPath + '/verses.txt', array.join(''), 'utf8');
 			callback();
 		}
 	});
@@ -332,7 +332,7 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 				var row = results[i];
 				parseChapter(row.reference, row.html);
 			}
-			that.fs.writeFileSync(outPath + "/" + that.version + '/chapters.txt', bible.join(''), "utf8");
+			that.fs.writeFileSync(outPath + '/chapters.txt', bible.join(''), "utf8");
 			callback();
 		}
 	});
@@ -453,12 +453,9 @@ if (process.argv.length < 5) {
 	var val = new VersesValidator(process.argv[4], dbFilename);
 	val.open(function() {
 		var outPath = process.argv[3]
-		if (! outPath.endsWith("/")) {
-			outPath += "/";
-		}
 		val.generateVersesFile(outPath, function() {
 			val.generateChaptersFile(outPath, function() {
-				TextFileCompare(outPath + bibleId + '/verses.txt', outPath + bibleId + '/chapters.txt', "VERSE");			
+				TextFileCompare(outPath + '/verses.txt', outPath + '/chapters.txt', "VERSE");			
 				ValidationAdapter.shared().close();
 				val.completed();
 				console.log(bibleId, "VersesValidator DONE");

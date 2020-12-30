@@ -420,9 +420,10 @@ const bibleId = process.argv[5];
 console.log(bibleId, "HTMLValidator START");
 const dbDir = process.argv[3];
 ValidationAdapter.shared().open(bibleId, dbDir, "HTMLValidator");
-const outPath = process.argv[4] + "/" + process.argv[5] + '/html';
+const outPath = process.argv[4] + '/html';
 ensureDirectory(outPath, function() {
 	var versionPath = process.argv[3] + "/" + bibleId + '.db';
+	console.log("BibleDB", versionPath);
 	//console.log(bibleId, versionPath);
 	var htmlValidator = new HTMLValidator(bibleId, versionPath);
 	htmlValidator.open(function() {
