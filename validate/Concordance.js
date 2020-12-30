@@ -313,10 +313,7 @@ if (process.argv.length < 3) {
 	var fs = require('fs');
 	var filename = process.argv[2] + "/" + process.argv[4] + '.db';
 	var outDir = process.argv[3]
-	//if (! outDir.endsWith("/")) {
-	//	outDir += "/";
-	//}
-	console.log('Process ' + filename);
+	//console.log('Process ' + filename);
 	var val = new ConcordanceValidator(process.argv[4], filename);
 	val.open(function(db) {
 		val.normalize(outDir, function() {

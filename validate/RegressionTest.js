@@ -48,8 +48,7 @@ class RegressionTest {
 			}
 		}
 		this.programs = ['XMLTokenizerTest', 'USXParserTest', 'HTMLValidator', 
-					'VersesValidator', 'StyleUseValidator', 'TableContentsValidator'];
-					//'ConcordanceValidator'];
+					'VersesValidator', 'StyleUseValidator', 'TableContentsValidator' ];//, 'ConcordanceValidator'];
 	}
 	execute() {
 		this.executeNext(-1, 0);
@@ -76,35 +75,29 @@ class RegressionTest {
 				that.errorMessage(command, error);
 			}
 			const output = 'STDERR: ' + stderr + '\n' + 'STDOUT: ' + stdout;
-			console.log(output);
-			/*
-			const outFile = 'output/' + version + '/' + program + '.out';
-			that.fs.writeFile(outFile, output, function(error) {
-				if (error) {
-					that.errorMessage(outFile, error);
-				}
-				if (program === 'VersionDiff') {
-					console.log(stdout);
-				} else {
-					const testFile = 'results/' + version + '/' + program + '.out';
-					var command = 'diff ' + testFile + ' ' + outFile;
-					that.child.exec(command, function(error, stdout, stderr) {
-						if (stdout && stdout.length > 0) {
-							that.errorOutput('TEST-DIFF STDOUT:', stdout, output);
-						}
-						if (stderr && stderr.length > 0) {
-							that.errorOutput('TEST-DIFF STDERR:', stderr, output);
-						}
-						if (error) {
-							that.errorMessage('TEST-DIFF ERROR', error);
-						}
-						console.log('OK');
-						that.executeNext(programIndex, versionIndex);
-					});
-				}
-			});
-			*/
-			that.executeNext(programIndex, versionIndex);	
+			//console.log(output);
+
+			const outFile = that.directory + "/" + version + "/output/" + program + ".out";
+			that.fs.writeFileSync(outFile, output);//, function(error) {
+			const baseline = that.directory + "/" + version + "/baseline/" + program + ".out";
+			if (that.fs.existsSync(baseline)) {
+				var command = 'diff ' + baseline + ' ' + outFile;
+				that.child.exec(command, function(error, stdout, stderr) {
+					if (stdout && stdout.length > 0) {
+						that.errorOutput('DIFF STDOUT:', version, program, stdout, output);
+					}
+					if (stderr && stderr.length > 0) {
+						that.errorOutput('DIFF STDERR:', version, program, stderr, output);
+					}
+					if (error) {
+						that.errorMessage('DIFF ERROR', version, program, error);
+					}
+					console.log(version, program, 'OK');
+					that.executeNext(programIndex, versionIndex);
+				});
+			} else {
+				that.executeNext(programIndex, versionIndex);
+			}
 		});
 	}
 	commandLine(program, version) {
@@ -127,14 +120,17 @@ class RegressionTest {
 			return `${program}.sh ${rootDir}/source ${rootDir}/ ${rootDir}/output ${version}`;
 		}
 	}
-	errorMessage(description, error) {
+	errorMessage(description, version, program, error) {
 		console.log('ERROR:', description, JSON.stringify(error));
+		console.log(version, program);
 		process.exit(1);
 	}
-	errorOutput(description, diffOut, execOut) {
+	errorOutput(description, version, program, diffOut, execOut) {
+		console.log("********************************");
 		console.log(execOut);
 		console.log('********************************');
 		console.log(description, diffOut);
+		console.log(version, program);
 		process.exit(1);
 	}
 }
