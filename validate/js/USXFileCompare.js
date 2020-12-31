@@ -48,7 +48,7 @@ function USXFileCompare(originalDir, generatedDir, filename, testType) {
 				original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
 				original = original.replace(/<verse eid=\"[A-Z0-9 :-]+\" \/>/g, '');
 				original = original.replace(/ vid=\"[A-Z0-9 :-]+\"/g, '');
-				//original = original.replace(/optbreak\/>/g, 'optbreak />'); // Hack to fix no space in optbreak element.
+				original = original.replace(/optbreak \/>/g, 'optbreak/>'); // Hack to fix no space in optbreak element.
 			}
 			if (original != generated) {
 				results.push("Line " + i+3);
