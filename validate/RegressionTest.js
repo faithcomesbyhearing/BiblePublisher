@@ -96,6 +96,7 @@ class RegressionTest {
 					that.executeNext(programIndex, versionIndex);
 				});
 			} else {
+				console.log(output);
 				that.executeNext(programIndex, versionIndex);
 			}
 		});
