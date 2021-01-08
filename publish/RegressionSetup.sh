@@ -6,6 +6,7 @@
 
 ROOTDIR=/Volumes/FCBH/BiblePublisher
 
+BuildPublisher.sh ${ROOTDIR}/BULCBV/source  ${ROOTDIR}/BULCBV  BULCBV  bul null ltr
 BuildPublisher.sh ${ROOTDIR}/ENGWEB/source  ${ROOTDIR}/ENGWEB  ENGWEB  eng en   ltr
 BuildPublisher.sh ${ROOTDIR}/ERV-ARB/source ${ROOTDIR}/ERV-ARB ERV-ARB arb ar   rtl
 BuildPublisher.sh ${ROOTDIR}/ERV-ENG/source ${ROOTDIR}/ERV-ENG ERV-ENG eng en   rtl
