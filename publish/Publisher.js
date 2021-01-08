@@ -309,7 +309,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			case 'usx':
 			case 'para':
 				var style = verseUSX.style;
-				if (style !== 's' && style != 's1' && style != 's2' && style != 's3' && style != 'r' && style != 'sp') {
+				if (style !== 's' && style != 's1' && style != 's2' && style != 's3' && style != 'r' && style != 'sp' && style != 'ms') {
 					for (var i=0; i<verseUSX.children.length; i++) {
 						breakRecursively(verseUSX.children[i]);
 					}
