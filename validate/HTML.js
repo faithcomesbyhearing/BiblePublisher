@@ -444,10 +444,12 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 							var priorChapter = parseFloat(chapterNum) - 1;
 							usx.push('<chapter eid="', that.bookId + " " + priorChapter, '"', END_EMPTY, EOL);
 						}
-						usx.push('<chapter number="', chapterNum, '" style="c"', ' sid="' + that.bookId + " " + chapterNum, '"', END_EMPTY);
-					} else {
-						usx.push('<chapter number="', chapterNum, '" style="c"', END_EMPTY);
 					}
+					usx.push('<chapter number="', chapterNum, '" style="c"');
+					if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
+					if (node['data-pubnumber']) usx.push(' pubnumber="', node['data-pubnumber'], '"');
+					if (that.usxVersionNum >= 3.0) usx.push(' sid="', that.bookId, ' ', chapterNum, '"');
+					usx.push(END_EMPTY);
 					node.children = [];
 				} else if (node.emptyElement) {
 					usx.push('<para style="', node['class'], '"', END_EMPTY);
@@ -461,12 +463,11 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 			case 'span':
 				if (node['class'] === 'v') {
 					var parts = node.id.split(':');
-					if (that.usxVersionNum >= 3.0) {
-						var verseId = that.bookId + " " + chapterNum + ":" + parts[2];
-						usx.push('<verse number="', parts[2], '" style="', node['class'], '" sid="', verseId, '"', END_EMPTY);
-					} else {
-						usx.push('<verse number="', parts[2], '" style="', node['class'], '"', END_EMPTY);
-					}
+					usx.push('<verse number="', parts[2], '" style="', node['class'], '"');
+					if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
+					if (node['data-pubnumber']) usx.push(' pubnumber="', node['data-pubnumber'], '"');
+					if (that.usxVersionNum >= 3.0) usx.push( ' sid="', that.bookId, ' ', chapterNum, ':', parts[2], '"');
+					usx.push(END_EMPTY);
 					node.children = [];
 				} else if (node['class'] === 'topf') {
 					usx.push('<note caller="', node.caller, '" style="f">');
@@ -671,6 +672,9 @@ function HTMLElement(tagName) {
 	this['data-usx'] = null;
 	this.id = null;
 	this['class'] = null;
+	this['data-number'] = null;
+	this['data-altnumber'] = null;
+	this['data-pubnumber'] = null;
 	this.caller = null;
 	this.loc = null;
 	this.note = null;
@@ -698,6 +702,8 @@ HTMLElement.prototype.buildHTML = function(array, includeChildren) {
 	if (this['data-usx']) array.push(' data-usx="', this['data-usx'], '"');
 	if (this.id) array.push(' id="', this.id, '"');
 	if (this['class']) array.push(' class="', this['class'], '"');
+	if (this['data-altnumber']) array.push(' altnumber"', this['data-altnumber'], '"');
+	if (this['data-pubnumber']) array.push(' pubnumber"', this['data-pubnumber'], '"');
 	if (this.caller) array.push(' caller="', this.caller, '"');
 	if (this.loc) array.push(' loc="', this.loc, '"');
 	if (this.note) array.push(' note="', this.note, '"');

@@ -981,6 +981,8 @@ Cell.prototype.toDOM = function(parentNode) {
 function Chapter(node) {
 	this.number = node.number;
 	this.style = node.style;
+	this.altnumber = node.altnumber;
+	this.pubnumber = node.pubnumber;
 	this.sid = node.sid;
 	this.eid = node.eid;
 	this.emptyElement = node.emptyElement;
@@ -989,16 +991,16 @@ function Chapter(node) {
 }
 Chapter.prototype.tagName = 'chapter';
 Chapter.prototype.openElement = function() {
-	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	if (this.sid) {
-		return('<chapter number="' + this.number + '" style="' + this.style +  '" sid="' + this.sid + elementEnd);
-	} else if (this.number) {
-		return('<chapter number="' + this.number + '" style="' + this.style + elementEnd);		
-	} else if (this.eid) {
-		return('<chapter eid="' + this.eid + elementEnd);		
-	} else {
-		sys.exit(1);
-	}
+	var element = ['<chapter'];
+	if (!this.eid) element.push(' number="', this.number, '"');
+	if (this.style) element.push(' style="', this.style, '"');
+	if (this.altnumber) element.push(' altnumber="', this.altnumber, '"');
+	if (this.pubnumber) element.push(' pubnumber="', this.pubnumber, '"');
+	if (this.sid) element.push(' sid="', this.sid, '"');
+	if (this.eid) element.push(' eid="', this.eid, '"');
+	if (this.emptyElement) element.push(' />');
+	else element.push('>');
+	return element.join('');
 };
 Chapter.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</chapter>');
@@ -1010,6 +1012,9 @@ Chapter.prototype.buildUSX = function(result) {
 Chapter.prototype.toDOM = function(parentNode, bookCode, localizeNumber) {
 	var child = new DOMNode('p');
 	child.setAttribute('class', this.style);
+	if (this.number) child.setAttribute('data-number', this.number);
+	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
+	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
 	child.emptyElement = false;
 	child.appendText(localizeNumber.toLocal(this.number));
 	parentNode.appendChild(child);
@@ -1138,6 +1143,8 @@ Table.prototype.toDOM = function(parentNode) {
 function Verse(node) {
 	this.number = node.number;
 	this.style = node.style;
+	this.altnumber = node.altnumber;
+	this.pubnumber = node.pubnumber;
 	this.sid = node.sid;
 	this.eid = node.eid;
 	this.emptyElement = node.emptyElement;
@@ -1146,14 +1153,16 @@ function Verse(node) {
 }
 Verse.prototype.tagName = 'verse';
 Verse.prototype.openElement = function() {
-	var elementEnd = (this.emptyElement) ? '" />' : '">';
-	if (this.sid) {
-		return('<verse number="' + this.number + '" style="' + this.style + '" sid="' + this.sid + elementEnd);
-	} else if (this.eid) {
-		return('<verse eid="' + this.eid + elementEnd);
-	} else {
-		return('<verse number="' + this.number + '" style="' + this.style + elementEnd);
-	}
+	var element = ['<verse'];
+	if (!this.eid) element.push(' number="', this.number, '"');
+	if (this.style) element.push(' style="', this.style, '"');
+	if (this.altnumber) element.push(' altnumber="', this.altnumber, '"');
+	if (this.pubnumber) element.push(' pubnumber="', this.pubnumber, '"');
+	if (this.sid) element.push(' sid="', this.sid, '"');
+	if (this.eid) element.push(' eid="', this.eid, '"');
+	if (this.emptyElement) element.push(' />');
+	else element.push('>');
+	return element.join('');
 };
 Verse.prototype.closeElement = function() {
 	return(this.emptyElement ? '' : '</verse>');
@@ -1167,6 +1176,9 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 	var child = new DOMNode('span');
 	child.setAttribute('id', reference);
 	child.setAttribute('class', this.style);
+	if (this.number) child.setAttribute('data-number', this.number);
+	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
+	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
 	child.emptyElement = false;
 	child.appendText(localizeNumber.toLocal(this.number) + '&nbsp;');
 	parentNode.appendChild(child);
