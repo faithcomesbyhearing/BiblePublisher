@@ -293,7 +293,9 @@ VerseBuilder.prototype.loadDB = function(callback) {
 		that.breakList = [];
 		that.oneVerse = null;
 		breakRecursively(chapterUSX);
-		that.breakList.push(that.oneVerse); // last verse in chapter
+		if (that.oneVerse) {
+			that.breakList.push(that.oneVerse); // last verse in chapter
+		}
 		return(that.breakList);
 	}
 	function breakRecursively(verseUSX) {
@@ -312,7 +314,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 						breakRecursively(verseUSX.children[i]);
 					}
 				}
-				break;
+				break;		
 			case 'verse':
 				if (verseUSX.eid) {
 					that.insideVerse = false;
@@ -931,8 +933,14 @@ Book.prototype.toDOM = function(parentNode) {
 */
 function Cell(node) {
 	this.style = node.style;
-	if (this.style !== 'tc1' && this.style !== 'tc2' && this.style !== 'tcr1' && this.style !== 'tcr2'  && this.style !== 'th1' && this.style !== 'th2') {
-		throw new Error('Cell style must be tc1, tc2, tcr1, tcr2, th1, th2.  It is |' + this.style + '|');
+	if (this.style !== 'tc1' && 
+		this.style !== 'tc2' && 
+		this.style !== 'tc3' &&
+		this.style !== 'tcr1' && 
+		this.style !== 'tcr2' && 
+		this.style !== 'th1' && 
+		this.style !== 'th2') {
+		throw new Error('Cell style must be tc1, tc2, tc3, tcr1, tcr2, th1, th2.  It is |' + this.style + '|');
 	}
 	this.align = node.align;
 	if (this.align !== 'start' && this.align !== 'end') {

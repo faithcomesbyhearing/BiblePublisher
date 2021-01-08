@@ -46,7 +46,9 @@ VerseBuilder.prototype.loadDB = function(callback) {
 		that.breakList = [];
 		that.oneVerse = null;
 		breakRecursively(chapterUSX);
-		that.breakList.push(that.oneVerse); // last verse in chapter
+		if (that.oneVerse) {
+			that.breakList.push(that.oneVerse); // last verse in chapter
+		}
 		return(that.breakList);
 	}
 	function breakRecursively(verseUSX) {
@@ -65,7 +67,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 						breakRecursively(verseUSX.children[i]);
 					}
 				}
-				break;
+				break;		
 			case 'verse':
 				if (verseUSX.eid) {
 					that.insideVerse = false;
