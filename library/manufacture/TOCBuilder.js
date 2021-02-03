@@ -59,11 +59,7 @@ TOCBuilder.prototype.loadDB = function(callback) {
 	var len = this.size();
 	for (var i=0; i<len; i++) {
 		var toc = this.toc.bookList[i];
-		var heading = toc.heading || toc.name;
-		var title = toc.title || toc.name || toc.heading;
-		var name = toc.name || toc.heading;
-		var abbrev = toc.abbrev || toc.name || toc.heading;
-		var values = [ toc.code, heading, title, name, abbrev, toc.chapters.join(","), 
+		var values = [ toc.code, toc.heading, toc.title, toc.name, toc.abbrev, toc.chapters.join(","), 
 			toc.priorBook, toc.nextBook ];
 		array.push(values);
 	}

@@ -422,11 +422,11 @@ TOCBuilder.prototype.loadDB = function(callback) {
 	var len = this.size();
 	for (var i=0; i<len; i++) {
 		var toc = this.toc.bookList[i];
-		var heading = toc.heading || toc.name;
-		var title = toc.title || toc.name || toc.heading;
-		var name = toc.name || toc.heading;
-		var abbrev = toc.abbrev || toc.name || toc.heading;
-		var values = [ toc.code, heading, title, name, abbrev, toc.chapters.join(","), 
+		//var heading = toc.heading || toc.name;
+		//var title = toc.title || toc.name || toc.heading;
+		//var name = toc.name || toc.heading;
+		//var abbrev = toc.abbrev || toc.name || toc.heading;
+		var values = [ toc.code, toc.heading, toc.title, toc.name, toc.abbrev, toc.chapters.join(","), 
 			toc.priorBook, toc.nextBook ];
 		array.push(values);
 	}
@@ -2558,10 +2558,10 @@ TableContentsAdapter.prototype.drop = function(callback) {
 TableContentsAdapter.prototype.create = function(callback) {
 	var statement = 'create table if not exists tableContents(' +
 		'code text primary key not null, ' +
-    	'heading text not null, ' +
-    	'title text not null, ' +
-    	'name text not null, ' +
-    	'abbrev text not null, ' +
+    	'heading text null, ' +
+    	'title text null, ' +
+    	'name text null, ' +
+    	'abbrev text null, ' +
 		'chapters text not null, ' +
 		'priorBook text null, ' +
 		'nextBook text null)';

@@ -18,10 +18,10 @@ TableContentsAdapter.prototype.drop = function(callback) {
 TableContentsAdapter.prototype.create = function(callback) {
 	var statement = 'create table if not exists tableContents(' +
 		'code text primary key not null, ' +
-    	'heading text not null, ' +
-    	'title text not null, ' +
-    	'name text not null, ' +
-    	'abbrev text not null, ' +
+    	'heading text null, ' +
+    	'title text null, ' +
+    	'name text null, ' +
+    	'abbrev text null, ' +
 		'chapters text not null, ' +
 		'priorBook text null, ' +
 		'nextBook text null)';
