@@ -422,10 +422,6 @@ TOCBuilder.prototype.loadDB = function(callback) {
 	var len = this.size();
 	for (var i=0; i<len; i++) {
 		var toc = this.toc.bookList[i];
-		//var heading = toc.heading || toc.name;
-		//var title = toc.title || toc.name || toc.heading;
-		//var name = toc.name || toc.heading;
-		//var abbrev = toc.abbrev || toc.name || toc.heading;
 		var values = [ toc.code, toc.heading, toc.title, toc.name, toc.abbrev, toc.chapters.join(","), 
 			toc.priorBook, toc.nextBook ];
 		array.push(values);
@@ -1189,9 +1185,10 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 */
 function Note(node) {
 	this.caller = node.caller.charAt(0);
-	if (this.caller !== '+' && this.caller !== '-' && this.caller !== '*') {
+	if (this.caller !== '+' && this.caller !== '-' && this.caller !== '*' 
+		&& this.caller !== 'a' && this.caller !== 'b' && this.caller !== 'c' && this.caller !== 'd') {
 		console.log(JSON.stringify(node));
-		throw new Error('Note caller with no + or - or *');
+		throw new Error('Note caller with no +, -, *, a, b, c, d');
 	}
 	this.style = node.style;
 	this.emptyElement = node.emptyElement;

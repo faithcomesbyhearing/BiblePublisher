@@ -255,9 +255,10 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 */
 function Note(node) {
 	this.caller = node.caller.charAt(0);
-	if (this.caller !== '+' && this.caller !== '-' && this.caller !== '*') {
+	if (this.caller !== '+' && this.caller !== '-' && this.caller !== '*' 
+		&& this.caller !== 'a' && this.caller !== 'b' && this.caller !== 'c' && this.caller !== 'd') {
 		console.log(JSON.stringify(node));
-		throw new Error('Note caller with no + or - or *');
+		throw new Error('Note caller with no +, -, *, a, b, c, d');
 	}
 	this.style = node.style;
 	this.emptyElement = node.emptyElement;
