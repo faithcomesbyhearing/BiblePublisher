@@ -254,11 +254,14 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 * This class contains a Note from a USX parsed Bible
 */
 function Note(node) {
-	this.caller = node.caller.charAt(0);
-	if (this.caller !== '+' && this.caller !== '-' && this.caller !== '*' 
-		&& this.caller !== 'a' && this.caller !== 'b' && this.caller !== 'c' && this.caller !== 'd') {
+	this.caller = node.caller;
+	//console.log("caller", node.caller, this.caller, this.caller.length);
+	//if (this.caller !== '+' && this.caller !== '-' && this.caller !== '*' 
+	//	&& this.caller !== 'a' && this.caller !== 'b' && this.caller !== 'c' && this.caller !== 'd') {
+	if (this.caller.length != 1) {
 		console.log(JSON.stringify(node));
-		throw new Error('Note caller with no +, -, *, a, b, c, d');
+		throw new Error('Note caller is not single char');
+	//	throw new Error('Note caller with no +, -, *, a, b, c, d');
 	}
 	this.style = node.style;
 	this.emptyElement = node.emptyElement;
