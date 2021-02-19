@@ -255,10 +255,11 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 */
 function Note(node) {
 	this.caller = node.caller;
-	if (this.caller.length != 1) {
-		console.log(JSON.stringify(node));
-		throw new Error('Note caller is not single char');
-	}
+	// Discarded 2/29/2021
+	//if (this.caller.length != 1) {
+	//	console.log(JSON.stringify(node));
+	//	throw new Error('Note caller is not single char');
+	//}
 	this.style = node.style;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
