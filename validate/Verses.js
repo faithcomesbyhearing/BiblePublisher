@@ -338,7 +338,7 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 	});
 	
 	function parseChapter(reference, html) {
-		const ignoreSet = new Set(['v', 's', 'r', 's1', 's2', 'ms', 'mr', 'qa', 'sp', 'ms']);
+		const ignoreSet = new Set(['v', 's', 'r', 's1', 's2', 'ms', 'mr', 'qa', 'sp', 'ms', 'ms1', 'ms2', 'ms3']);
 		var reader = new XMLTokenizer(html);
 		var elementStack = [];
 		var element = null;
