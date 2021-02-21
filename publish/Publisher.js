@@ -2403,6 +2403,16 @@ VersesAdapter.prototype.create = function(callback) {
 	});
 };
 VersesAdapter.prototype.load = function(array, callback) {
+	var uniqueTest = new Map();
+	var priorVerse = null;
+	for (var i=0; i<array.length; i++) {
+		const key = array[i][0];
+		if (uniqueTest.has(key)) {
+			console.log('Duplicate verse reference ' + key + ' after ' + uniqueTest.get(key) + ' and ' + priorVerse);
+		}
+		uniqueTest.set(key, priorVerse);
+		priorVerse = key;
+	}
 	var statement = 'insert into verses(reference, xml, html) values (?,?,?)';
 	this.database.bulkExecuteDML(statement, array, function(count) {
 		if (count instanceof IOError) {
