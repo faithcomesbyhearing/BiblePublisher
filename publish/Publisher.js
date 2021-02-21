@@ -305,7 +305,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			case 'note':
 			case 'ref':
 			case 'optbreak':
-			case 'table':
+			case 'table':   // This excludes table content from verses.  This might not always be correct.
 				break;
 			case 'usx':
 			case 'para':
