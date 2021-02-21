@@ -305,6 +305,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			case 'note':
 			case 'ref':
 			case 'optbreak':
+			case 'table':
 				break;
 			case 'usx':
 			case 'para':
