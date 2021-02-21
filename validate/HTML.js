@@ -397,9 +397,9 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 		usx.push('<usx version="' + that.usxVersion + '">');
 		for (var i=0; i<chapters.length; i++) {
 			recurseOverHTML(usx, chapters[i]);
-		}
-		if (that.usxVersionNum >= 3.0) {
-			usx.push('<chapter eid="', book, ' ', that.lastChapter, '" />', EOL);
+			if (that.usxVersionNum >= 3.0 && that.lastChapter > "0") {
+				usx.push('<chapter eid="', book, ' ', that.lastChapter, '" />', EOL);
+			}
 		}
 		usx.push('</usx>');
 		return(usx.join(''));
@@ -439,12 +439,6 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 				break;
 			case 'p':
 				if (node['class'] === 'c') {
-					if (that.usxVersionNum >= 3.0) {
-						if (chapterNum > "1") {
-							var priorChapter = parseFloat(chapterNum) - 1;
-							usx.push('<chapter eid="', that.bookId + " " + priorChapter, '"', END_EMPTY, EOL);
-						}
-					}
 					usx.push('<chapter number="', chapterNum, '" style="c"');
 					if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
 					if (node['data-pubnumber']) usx.push(' pubnumber="', node['data-pubnumber'], '"');
