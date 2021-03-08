@@ -316,6 +316,8 @@ function USXFileCompare(originalDir, generatedDir, filename, testType) {
 				original = original.replace(/<verse eid=\"[A-Z0-9\, :-]+\" \/>/g, ''); // Hack remove eid elements
 				original = original.replace(/ vid=\"[A-Z0-9 :-]+\"/g, '');
 				original = original.replace(/optbreak \/>/g, 'optbreak/>'); // Hack to fix no space in optbreak element.
+				original = original.replace(/ vid=\"[A-Z0-9]{3} [0-9]+\:[0-9a-d]+\"/g, '')
+				 //<para style="p" vid="EXO 12:46b">
 			}
 			if (original != generated) {
 				results.push("Line " + i+3);
