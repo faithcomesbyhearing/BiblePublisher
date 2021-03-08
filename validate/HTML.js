@@ -317,7 +317,6 @@ function USXFileCompare(originalDir, generatedDir, filename, testType) {
 				original = original.replace(/ vid=\"[A-Z0-9 :-]+\"/g, '');
 				original = original.replace(/optbreak \/>/g, 'optbreak/>'); // Hack to fix no space in optbreak element.
 				original = original.replace(/ vid=\"[A-Z0-9]{3} [0-9]+\:[0-9a-d]+\"/g, '')
-				 //<para style="p" vid="EXO 12:46b">
 			}
 			if (original != generated) {
 				results.push("Line " + i+3);
@@ -352,6 +351,8 @@ function HTMLValidator(version, versionPath) {
 	this.usxVersionNum = 0;
 	this.bookId = null;
 	this.lastChapter = null;
+	this.priorFigureNode = null;
+	this.priorFigureImgNode = null;
 	Object.seal(this);
 }
 HTMLValidator.prototype.open = function(callback) {
@@ -510,6 +511,25 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 			case 'wbr':
 				usx.push('<optbreak/>');
 				break;
+			case 'figure':
+				that.priorFigureNode = node;
+				break;
+			case 'img':
+				that.priorFigureImgNode = node;
+				break;
+			case 'figcaption':
+				usx.push('<figure');
+				var node1 = that.priorFigureNode;
+				var node2 = that.priorFigureImgNode;
+				if (node1['data-style']) usx.push(' style="', node1['data-style'], '"');
+				if (node2['alt']) usx.push(' alt="', node2['alt'], '"');
+				if (node2['src']) usx.push(' file="', node2['src'], '"');
+				if (node1['data-size']) usx.push(' size="', node1['data-size'], '"');
+				if (node1['data-loc']) usx.push(' loc="', node1['data-loc'], '"');
+				if (node1['data-copy']) usx.push(' copy="', node1['data-copy'], '"');
+				if (node1['data-ref']) usx.push(' ref="', node1['data-ref'], '"');
+				usx.push('>');
+				break;
 			case 'TEXT':
 				usx.push(node.text);
 				break;
@@ -565,6 +585,13 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 					break;
 				case 'td':
 					usx.push('</cell>');
+					break;
+				case 'figure':
+					usx.push('</figure>');
+					break;
+				case 'img': // part of figure in usx
+					break;
+				case 'figcaption': // part of figure in usx
 					break;
 				case 'wbr':
 					break;
@@ -671,6 +698,13 @@ function HTMLElement(tagName) {
 	this['data-number'] = null;
 	this['data-altnumber'] = null;
 	this['data-pubnumber'] = null;
+	this['data-style'] = null;
+	this['data-size'] = null;
+	this['data-loc'] = null;
+	this['data-copy'] = null;
+	this['data-ref'] = null;
+	this['src'] = null;
+	this['alt'] = null;
 	this.caller = null;
 	this.loc = null;
 	this.note = null;

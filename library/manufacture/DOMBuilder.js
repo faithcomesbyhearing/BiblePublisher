@@ -83,6 +83,9 @@ DOMBuilder.prototype.readRecursively = function(domParent, node) {
 		case 'cell':
 			domNode = node.toDOM(domParent);
 			break;
+		case 'figure':
+			domNode = node.toDOM(domParent);
+			break;
 		default:
 			throw new Error('Unknown tagname ' + node.tagName + ' in DOMBuilder.readBook');
 	}

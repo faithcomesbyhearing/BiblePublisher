@@ -105,6 +105,8 @@ USXParser.prototype.createUSXObject = function(tempNode) {
 			return(new Row(tempNode));
 		case 'cell':
 			return(new Cell(tempNode));
+		case 'figure':
+			return(new Figure(tempNode));
 		case 'usx':
 			return(new USX(tempNode));
 		default:

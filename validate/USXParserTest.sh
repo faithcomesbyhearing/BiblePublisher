@@ -15,6 +15,7 @@ cat ../Library/model/usx/OptBreak.js >> USXParser.js
 cat ../Library/model/usx/Table.js >> USXParser.js
 cat ../Library/model/usx/Row.js >> USXParser.js
 cat ../Library/model/usx/Cell.js >> USXParser.js
+cat ../Library/model/usx/Figure.js >> USXParser.js
 cat ../Library/xml/XMLTokenizer.js >> USXParser.js
 cat ../Library/xml/USXParser.js >> USXParser.js
 cat ../Library/io/ValidationAdapter.js >> USXParser.js

@@ -350,6 +350,10 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 			var tokenValue = reader.tokenValue();
 			
 			switch(tokenType) {
+				case XMLNodeType.ELE:
+					element = { tagName: tokenValue };
+					elementStack.push(element);
+					break;
 				case XMLNodeType.ELE_OPEN:
 					element = { tagName: tokenValue };
 					break;

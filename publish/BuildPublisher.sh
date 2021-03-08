@@ -22,6 +22,7 @@ cat ../library/model/usx/Verse.js >> Publisher.js
 cat ../library/model/usx/Note.js >> Publisher.js
 cat ../library/model/usx/Char.js >> Publisher.js
 cat ../library/model/usx/Ref.js >> Publisher.js
+cat ../library/model/usx/Figure.js >> Publisher.js
 cat ../library/model/usx/OptBreak.js >> Publisher.js
 cat ../library/model/usx/Text.js >> Publisher.js
 cat ../library/xml/XMLTokenizer.js >> Publisher.js
