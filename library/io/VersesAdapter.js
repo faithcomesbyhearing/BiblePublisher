@@ -17,7 +17,8 @@ VersesAdapter.prototype.drop = function(callback) {
 };
 VersesAdapter.prototype.create = function(callback) {
 	var statement = 'create table if not exists verses(' +
-		'reference text not null primary key, ' +
+		'sequence integer not null primary key,' +
+		'reference text not null, ' +
 		'xml text not null, ' +
 		'html text not null)';
 	this.database.executeDDL(statement, function(err) {
