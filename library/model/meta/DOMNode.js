@@ -17,7 +17,7 @@ DOMNode.prototype.getAttribute = function(name) {
 	return(this.attributes[name]);
 };
 DOMNode.prototype.setAttribute = function(name, value) {
-	if (value) {
+	if (value != null) {
 		this.attributes[name] = value;
 	}
 };

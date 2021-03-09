@@ -17,7 +17,6 @@ function HTMLValidator(version, versionPath) {
 	this.bookId = null;
 	this.lastChapter = null;
 	this.priorFigureNode = null;
-	this.priorFigureImgNode = null;
 	Object.seal(this);
 }
 HTMLValidator.prototype.open = function(callback) {
@@ -180,20 +179,19 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 				that.priorFigureNode = node;
 				break;
 			case 'img':
-				that.priorFigureImgNode = node;
-				break;
-			case 'figcaption':
 				usx.push('<figure');
 				var node1 = that.priorFigureNode;
-				var node2 = that.priorFigureImgNode;
-				if (node1['data-style']) usx.push(' style="', node1['data-style'], '"');
-				if (node2['alt']) usx.push(' alt="', node2['alt'], '"');
-				if (node2['src']) usx.push(' file="', node2['src'], '"');
-				if (node1['data-size']) usx.push(' size="', node1['data-size'], '"');
-				if (node1['data-loc']) usx.push(' loc="', node1['data-loc'], '"');
-				if (node1['data-copy']) usx.push(' copy="', node1['data-copy'], '"');
-				if (node1['data-ref']) usx.push(' ref="', node1['data-ref'], '"');
+				if (node1['data-style'] != null) usx.push(' style="', node1['data-style'], '"');
+				if (node1['data-desc'] != null) usx.push(' desc="', node1['data-desc'], '"');
+				if (node['alt']) usx.push(' alt="', node['alt'], '"');
+				if (node['src']) usx.push(' file="', node['src'], '"');
+				if (node1['data-size'] != null) usx.push(' size="', node1['data-size'], '"');
+				if (node1['data-loc'] != null) usx.push(' loc="', node1['data-loc'], '"');
+				if (node1['data-copy'] != null) usx.push(' copy="', node1['data-copy'], '"');
+				if (node1['data-ref'] != null) usx.push(' ref="', node1['data-ref'], '"');
 				usx.push('>');
+				break;
+			case 'figcaption':
 				break;
 			case 'TEXT':
 				usx.push(node.text);
@@ -364,6 +362,7 @@ function HTMLElement(tagName) {
 	this['data-altnumber'] = null;
 	this['data-pubnumber'] = null;
 	this['data-style'] = null;
+	this['data-desc'] = null;
 	this['data-size'] = null;
 	this['data-loc'] = null;
 	this['data-copy'] = null;

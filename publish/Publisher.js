@@ -1326,6 +1326,7 @@ Ref.prototype.toDOM = function(parentNode) {
 */
 function Figure(node) {
 	this.style = node.style;
+	this.desc = node.desc;
 	this.alt = node.alt;
 	this.file = node.file;
 	this.size = node.size;
@@ -1346,6 +1347,7 @@ Figure.prototype.openElement = function() {
 	var result = [];
 	result.push('<figure');
 	addAttr('style', this.style);
+	addAttr('desc', this.desc);
 	addAttr('alt', this.alt);
 	addAttr('file', this.file);
 	addAttr('size', this.size);
@@ -1355,7 +1357,7 @@ Figure.prototype.openElement = function() {
 	result.push(elementEnd);
 	return result.join('');
 	function addAttr(name, value) {
-		if (value) {
+		if (value != null) {
 			result.push(' ' + name + '="' + value + '"');
 		}
 	}
@@ -1372,6 +1374,7 @@ Figure.prototype.toDOM = function(parentNode) {
 	var child = new DOMNode('figure');
 	child.setAttribute('hidden', 'true')
 	child.setAttribute('data-style', this.style);
+	child.setAttribute('data-desc', this.desc);
 	child.setAttribute('data-size', this.size);
 	child.setAttribute('data-loc', this.loc);
 	child.setAttribute('data-copy', this.copy);
@@ -2073,7 +2076,7 @@ DOMNode.prototype.getAttribute = function(name) {
 	return(this.attributes[name]);
 };
 DOMNode.prototype.setAttribute = function(name, value) {
-	if (value) {
+	if (value != null) {
 		this.attributes[name] = value;
 	}
 };
