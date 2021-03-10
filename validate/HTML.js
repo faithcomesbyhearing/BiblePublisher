@@ -313,7 +313,7 @@ function USXFileCompare(originalDir, generatedDir, filename, testType) {
 			}
 			if (testType == "HTML") {
 				original = original.replace(/\"\/\>/g, '" />');  // Hack to fix no space in some empty elements
-				original = original.replace(/<verse eid=\"[A-Z0-9\, :-]+\" \/>/g, ''); // Hack remove eid elements
+				original = original.replace(/<verse eid=\"[A-Z0-9a-z\, :-]+\" \/>/g, ''); // Hack remove eid elements
 				original = original.replace(/ vid=\"[A-Z0-9 :-]+\"/g, '');
 				original = original.replace(/optbreak \/>/g, 'optbreak/>'); // Hack to fix no space in optbreak element.
 				original = original.replace(/ vid=\"[A-Z0-9]{3} [0-9]+\:[0-9a-d]+\"/g, '')
