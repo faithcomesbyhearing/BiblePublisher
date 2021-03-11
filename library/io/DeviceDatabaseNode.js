@@ -12,6 +12,7 @@ function DeviceDatabase(versionFile) {
 	//this.database.on('trace', function(sql) { console.log('DO ', sql); });
 	//this.database.on('profile', function(sql, ms) { console.log(ms, 'DONE', sql); });
 	this.database.exec("PRAGMA foreign_keys = ON");
+	this.database.exec("PRAGMA encoding = 'UTF-8'");
 
 	this.chapters = new ChaptersAdapter(this);
     this.verses = new VersesAdapter(this);

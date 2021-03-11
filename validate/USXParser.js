@@ -162,12 +162,97 @@ Chapter.prototype.toDOM = function(parentNode, bookCode, localizeNumber) {
 */
 function Para(node) {
 	this.style = node.style;
+	if (!Para.isKnownStyle(this.style)) {
+		console.log("WARN Unknown Para style '" + this.style + "'");
+	}
 	this.vid = node.vid;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	this.children = []; // contains verse | note | char | text
 	Object.seal(this);
 }
+Para.inChapterInVerse = new Set(['p', // normal paragraph
+								'm', // margin paragraph
+								'po', // opening of an epistle
+								'pr', // right aligned
+								'cls', // closure
+								'pmo', // embedded text
+								'pm', // embedded text paragraph
+								'pmc', // embedded text closing
+								'pmr', // embedded text refrain
+								'pi', 'pi1', 'pi2', 'pi3', // indented paragraph
+								'mi', // indented flush left
+								'nb', // no break
+								'pb', // explicit page break
+								'pc', // centered paragrpah
+								'ph', 'ph1', 'ph2', 'ph3', // indented wtih hanging indent
+								'q', 'q1', 'q2', 'q3', // poetry
+								'qr', // right aligned poetry
+								'qc', // centered poetry
+								'qm', 'qm1', 'qm2', 'qm3', // embedded text poetic line
+								'b', // blank line
+								'lh', // list header
+								'li', 'li1', 'li2', 'li3', // list entry
+								'lf', // list footer
+								'lim', 'lim1', 'lim2', 'lim3' // embedded list entry
+								]);
+Para.inChapterNotVerse = new Set(['iex', // introduction or bridge text
+								'ms', 'ms1', 'ms2', 'ms3', // section heading
+								'mr', 'mr1', 'mr2', 'mr3', // section reference range
+								's', 's1', 's2', 's3', // section heading s, s1, s2, s3
+								'sr', // section reference range
+								'r', // parallel passage reference
+								'd', // descriptive title
+								'sp', // speaker identification
+								'cl', // chapter label
+								'cp', 'cp1', 'cp2', 'cp3', // published chapter character
+								'cd', // chapter description
+								'sd', 'sd1', 'sd2', 'sd3', // semantic division (can be ignored)
+								'qa', // acrostic heading
+								'qd' // Hebrew note
+								]);
+Para.notInChapter = new Set(['ide', // encoding
+							'sts', // status
+							'rem', // remark of translator
+							'h', // running header text
+							'toc', 'toc1', // long table of contents text
+							'toc2', // short table of contents text
+							'toc3', // book abbreviation
+							'toca2', // alternative language short table of contents text
+							'toca3', // alternative language book abbreviation
+							'imt', 'imt1', 'imt2', 'imt3', // introduction major title
+							'is', 'is1', 'is2', 'is3', // introduction section heading
+							'ip', // introduction paragraph
+							'ipi', // indented introduction paragraph
+							'im', // introduction flush left margin paragraph
+							'imi', // Indented introduction flush left margin paragraph
+							'ipq', // introduction quote from scripture text paragraph
+							'imq', // introduction flush left margin quote from scripture
+							'ipr', // introduction right-aligned paragraph
+							'iq', 'iq1', 'iq2', 'iq3', // introduction poetic line
+							'ib', // introduction blank line
+							'ili', 'ili1', 'ili2', 'ili3', // introduction list item
+							'iot', // introduction outline title
+							'io', 'io1', 'io2', 'io3', // introduction outline entry
+							'imte', // introduction major title ending
+							'ie', // introduction end
+							'mt', 'mt1', 'mt2', 'mt3', 'mt4', // main title
+							'mte', // main title at introduction ending
+							'periph' // various peripheral material'
+							]);
+Para.allStyles = null;
+Para.isKnownStyle = function(style) {
+	if (Para.allStyles === null) {
+		Para.allStyles = new Set(Para.inChapterInVerse);
+		for (let elem of Para.inChapterNotVerse) {
+			Para.allStyles.add(elem);
+		}
+		for (let elem of Para.notInChapter) {
+			Para.allStyles.add(elem);
+		}
+	}
+	return Para.allStyles.has(style);
+};
 Para.prototype.tagName = 'para';
 Para.prototype.addChild = function(node) {
 	this.children.push(node);
@@ -311,12 +396,90 @@ Note.prototype.toDOM = function(parentNode, bookCode, chapterNum, noteNum, direc
 */
 function Char(node) {
 	this.style = node.style;
+	if (!Char.isKnownStyle(this.style)) {
+		console.log("WARN Unknown Char style '" + this.style + "'");
+	}
 	this.closed = node.closed;
 	this.emptyElement = node.emptyElement;
 	this.usxParent = null;
 	this.children = [];
 	Object.seal(this);
 }
+Char.inChapterInVerse = new Set(['bk', // quoted book title
+								'k', // keyword
+								'litl', // list entry total
+								'nd', // name of God
+								'ord', // ordinal number
+								'pn', // proper name
+								'png', // geographic proper name
+								'qac', // acrostic within a poetic line
+								'qs', // selah
+								'qt', // quoted text
+								'sig', // signature
+								'sls', // passage based on second language
+								'tl', // transliterated word
+								'wj', // words of Jesus
+								'em', // emphasize
+								'bd', // bold
+								'bdit', // bold + iltalic
+								'it', // italic
+								'no', // normal
+								'sc', // small cap text
+								'sup', // super script
+								'rb', // ruby characters
+								'va', // alternate verse number
+								'vp' // published verse character
+								]);
+Char.inChapterNotVerse = new Set(['add', // translator addition
+								'dc', // deuterocanonical/LXX additions
+								'rq', // inline quote reference
+								'ca' // chapter alternate
+								]);
+Char.notInChapter = new Set(['ior', // introduction outline reference range
+							'iqt', // introduction quoted text
+							'ndx', // subject index entry
+							'pro', // pronunciation
+							'w', // wordlist glossary entry
+							'wg', // Greek wordlist entry
+							'wh' // Hebrew wordlist entry
+							]);
+Char.inFootnote = new Set(['f', //  footnote
+							'fe', // endnote
+							'fr', // footnote origin reference
+							'fk', // footnote keyword
+							'fq', // footnote translation quotation
+							'fqa', // footnote alternate translation
+							'fl', // footnote label
+							'fp', // footnote additional paragraph
+							'fv', // footnote verse number
+							'ft', // footnote text 
+							'fdc', // Deuterocanonical footnote text
+							'fm', // footnote reference mark
+							'x', // cross reference
+							'xo', // cross reference origin reference
+							'xk', // cross reference keyword
+							'xq', // cross reference quotation
+							'xt', // cross reference target
+							'xot', // cross reference other text
+							'xnt', // cross reference other text references
+							'xdc' // Deuterocanonical cross reference text
+							]);
+Char.allStyles = null;
+Char.isKnownStyle = function(style) {
+	if (Char.allStyles == null) {
+		Char.allStyles = new Set(Char.inChapterInVerse);
+		for (let elem of Char.inChapterNotVerse) {
+			Char.allStyles.add(elem);
+		}
+		for (let elem of Char.notInChapter) {
+			Char.allStyles.add(elem);
+		}
+		for (let elem of Char.inFootnote) {
+			Char.allStyles.add(elem);
+		}
+	}
+	return Char.allStyles.has(style);
+};
 Char.prototype.tagName = 'char';
 Char.prototype.addChild = function(node) {
 	this.children.push(node);
