@@ -118,7 +118,7 @@ Para.prototype.buildUSX = function(result) {
 	result.push(this.closeElement());
 };
 Para.prototype.toDOM = function(parentNode) {
-	var identStyles = [ 'ide', 'sts', 'rem', 'h', 'toc1', 'toc2', 'toc3', 'cl' ];
+	var identStyles = [ 'ide', 'sts', 'rem', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
 	var child = new DOMNode('p');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {

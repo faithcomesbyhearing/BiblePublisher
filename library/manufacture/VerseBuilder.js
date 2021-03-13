@@ -62,9 +62,12 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			case 'table':   // This excludes table content from verses.  This might not always be correct.
 				break;
 			case 'usx':
+				for (var i=0; i<verseUSX.children.length; i++) {
+					breakRecursively(verseUSX.children[i]);
+				}
+				break;
 			case 'para':
-				var style = verseUSX.style;
-				if (style !== 's' && style != 's1' && style != 's2' && style != 's3' && style != 'r' && style != 'sp' && style != 'ms') {
+				if (Para.inChapterInVerse.has(verseUSX.style)) {
 					for (var i=0; i<verseUSX.children.length; i++) {
 						breakRecursively(verseUSX.children[i]);
 					}

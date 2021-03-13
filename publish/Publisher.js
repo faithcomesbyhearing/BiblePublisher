@@ -309,9 +309,12 @@ VerseBuilder.prototype.loadDB = function(callback) {
 			case 'table':   // This excludes table content from verses.  This might not always be correct.
 				break;
 			case 'usx':
+				for (var i=0; i<verseUSX.children.length; i++) {
+					breakRecursively(verseUSX.children[i]);
+				}
+				break;
 			case 'para':
-				var style = verseUSX.style;
-				if (style !== 's' && style != 's1' && style != 's2' && style != 's3' && style != 'r' && style != 'sp' && style != 'ms') {
+				if (Para.inChapterInVerse.has(verseUSX.style)) {
 					for (var i=0; i<verseUSX.children.length; i++) {
 						breakRecursively(verseUSX.children[i]);
 					}
@@ -1141,7 +1144,7 @@ Para.prototype.buildUSX = function(result) {
 	result.push(this.closeElement());
 };
 Para.prototype.toDOM = function(parentNode) {
-	var identStyles = [ 'ide', 'sts', 'rem', 'h', 'toc1', 'toc2', 'toc3', 'cl' ];
+	var identStyles = [ 'ide', 'sts', 'rem', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
 	var child = new DOMNode('p');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {
