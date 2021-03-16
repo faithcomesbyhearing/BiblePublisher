@@ -1076,7 +1076,8 @@ Para.inChapterNotVerse = new Set(['iex', // introduction or bridge text
 								'cd', // chapter description
 								'sd', 'sd1', 'sd2', 'sd3', // semantic division (can be ignored)
 								'qa', // acrostic heading
-								'qd' // Hebrew note
+								'qd', // Hebrew note
+								'v', // verse number
 								]);
 Para.notInChapter = new Set(['ide', // encoding
 							'sts', // status
@@ -1105,7 +1106,8 @@ Para.notInChapter = new Set(['ide', // encoding
 							'ie', // introduction end
 							'mt', 'mt1', 'mt2', 'mt3', 'mt4', // main title
 							'mte', // main title at introduction ending
-							'periph' // various peripheral material'
+							'periph', // various peripheral material'
+							'restore' // nonstandard translator's notes like rem
 							]);
 Para.allStyles = null;
 Para.isKnownStyle = function(style) {
@@ -1144,7 +1146,7 @@ Para.prototype.buildUSX = function(result) {
 	result.push(this.closeElement());
 };
 Para.prototype.toDOM = function(parentNode) {
-	var identStyles = [ 'ide', 'sts', 'rem', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
+	var identStyles = [ 'ide', 'sts', 'rem', 'restore', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
 	var child = new DOMNode('p');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {

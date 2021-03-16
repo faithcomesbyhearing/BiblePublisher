@@ -81,7 +81,8 @@ Para.notInChapter = new Set(['ide', // encoding
 							'ie', // introduction end
 							'mt', 'mt1', 'mt2', 'mt3', 'mt4', // main title
 							'mte', // main title at introduction ending
-							'periph' // various peripheral material'
+							'periph', // various peripheral material'
+							'restore' // nonstandard translator's notes like rem
 							]);
 Para.allStyles = null;
 Para.isKnownStyle = function(style) {
@@ -120,7 +121,7 @@ Para.prototype.buildUSX = function(result) {
 	result.push(this.closeElement());
 };
 Para.prototype.toDOM = function(parentNode) {
-	var identStyles = [ 'ide', 'sts', 'rem', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
+	var identStyles = [ 'ide', 'sts', 'rem', 'restore', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
 	var child = new DOMNode('p');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {
@@ -470,7 +471,6 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 	});
 	
 	function parseChapter(reference, html) {
-		//const ignoreSet = new Set(['v', 's', 'r', 's1', 's2', 's3', 'ms', 'mr', 'qa', 'sp', 'ms', 'ms1', 'ms2', 'ms3']);
 		var reader = new XMLTokenizer(html);
 		var elementStack = [];
 		var element = null;
@@ -516,13 +516,11 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 							verse.push(tokenValue);
 							break;
 						case 'p':
-							//if (!ignoreSet.has(clas)) {
 							if (!Para.inChapterNotVerse.has(clas)) {
 								verse.push(tokenValue);
 							}
 							break;
 						case 'span':
-							//if (!ignoreSet.has(clas) && ! isAncestorFootnote(elementStack)) {
 							if (!Para.inChapterNotVerse.has(clas) && !isAncestorFootnote(elementStack)) {
 								verse.push(tokenValue);
 							}
