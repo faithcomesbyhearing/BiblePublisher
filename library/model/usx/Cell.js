@@ -4,14 +4,8 @@
 */
 function Cell(node) {
 	this.style = node.style;
-	if (this.style !== 'tc1' && 
-		this.style !== 'tc2' && 
-		this.style !== 'tc3' &&
-		this.style !== 'tcr1' && 
-		this.style !== 'tcr2' && 
-		this.style !== 'th1' && 
-		this.style !== 'th2') {
-		throw new Error('Cell style must be tc1, tc2, tc3, tcr1, tcr2, th1, th2.  It is |' + this.style + '|');
+	if (! Cell.expectedStyles.has(this.style)) {
+		throw new Error('Cell style must be ' + Array.from(Cell.expectedStyles).join(', ') + '.  It is |' + this.style + '|');
 	}
 	this.align = node.align;
 	if (this.align !== 'start' && this.align !== 'end') {
@@ -21,6 +15,11 @@ function Cell(node) {
 	this.children = [];
 	Object.seal(this);
 }
+Cell.expectedStyles = new Set(['tc1', 'tc2', 'tc3', 'tc4',  // table cell number
+								'tcr1','tcr2', 'tcr3', 'tcr4', // table cell number right aligned
+								'th1', 'th2', 'th3', 'th4', // table column heading
+								'thr1', 'thr2', 'thr3', 'thr4' // table column heading right aligned
+								]);
 Cell.prototype.tagName = 'cell';
 Cell.prototype.addChild = function(node) {
 	this.children.push(node);
