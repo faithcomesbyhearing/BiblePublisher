@@ -397,19 +397,21 @@ TOCBuilder.prototype.readRecursively = function(node) {
 			}
 			break;
 		case 'para':
-			switch(node.style) {
-				case 'h':
-					this.tocBook.heading = node.children[0].text;
-					break;
-				case 'toc1':
-					this.tocBook.title = node.children[0].text;
-					break;
-				case 'toc2':
-					this.tocBook.name = node.children[0].text;
-					break;
-				case 'toc3':
-					this.tocBook.abbrev = node.children[0].text;
-					break;
+			if (node.children.length > 0) {
+				switch(node.style) {
+					case 'h':
+						this.tocBook.heading = node.children[0].text;
+						break;
+					case 'toc1':
+						this.tocBook.title = node.children[0].text;
+						break;
+					case 'toc2':
+						this.tocBook.name = node.children[0].text;
+						break;
+					case 'toc3':
+						this.tocBook.abbrev = node.children[0].text;
+						break;
+				}
 			}
 	}
 	if ('children' in node) {
