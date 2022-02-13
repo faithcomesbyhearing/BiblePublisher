@@ -457,7 +457,9 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 				}
 				break;
 			case 'span':
-				if (node['class'] === 'v') {
+				if (node['class'] === 'p') {
+					usx.push('<para style="', node['class'], '">');
+				} else if (['v', 'v v-number'].includes(node['class'])) {
 					var parts = node.id.split(':');
 					usx.push('<verse number="', parts[2], '" style="', node['class'], '"');
 					if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
@@ -465,6 +467,8 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 					if (that.usxVersionNum >= 3.0) usx.push( ' sid="', that.bookId, ' ', chapterNum, ':', parts[2], '"');
 					usx.push(END_EMPTY);
 					node.children = [];
+				} else if (['v-container', 'v-text'].includes(node['class'])) {
+					//ignore
 				} else if (node['class'] === 'topf') {
 					usx.push('<note caller="', node.caller, '" style="f">');
 					clearTextChildren(node); // clear note button
@@ -531,6 +535,8 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 			case 'TEXT':
 				usx.push(node.text);
 				break;
+			case 'br':
+				break;
 			default:
 				throw new Error('unexpected HTML element ' + node.tagName + '.');		
 		}
@@ -563,7 +569,9 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 					}
 					break;
 				case 'span':
-					if (node['class'] === 'v') {
+					if (node['class'] === 'p' && ! node.emptyElement) {
+						usx.push('</para>');
+					} else if (['v-container', 'v v-number', 'v-text', 'v'].includes(node['class'])) {
 						// do nothing
 					} else if (node['class'] === 'topf' || node['class'] === 'topx') {
 						usx.push('</note>');
@@ -591,7 +599,7 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 					break;
 				case 'figcaption': // part of figure in usx
 					break;
-				case 'wbr':
+				case 'br':
 					break;
 				default:
 					throw new Error('unexpected HTML element ' + node.tagName + '.');
