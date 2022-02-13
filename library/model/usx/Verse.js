@@ -32,7 +32,7 @@ Verse.prototype.buildUSX = function(result) {
 	result.push(this.openElement());
 	result.push(this.closeElement());
 };
-Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumber) {
+Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumber, printVerse = true) {
 	var reference = bookCode + ':' + chapterNum + ':' + this.number;
 	var container = new DOMNode('span');
 	container.setAttribute('class', 'v-container');
@@ -47,7 +47,7 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
 	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
 	child.emptyElement = false;
-	child.appendText(localizeNumber.toLocal(this.number) + '&nbsp;');
+	if (printVerse) child.appendText(localizeNumber.toLocal(this.number) + '&nbsp;');
 
 	container.appendChild(child);
 	parentNode.appendChild(container);

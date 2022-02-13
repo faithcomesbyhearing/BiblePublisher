@@ -62,7 +62,7 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 			if (this.oneVerse && node.style === 'p') {
 				if(node.children[0].tagName !== 'verse' && this.oneVerse) {
 					this.verseParentDOM = domNode;
-					this.newParentDOM = this.oneVerse.toDOM(domNode, this.bookCode, this.chapter, this.localizeNumber);
+					this.newParentDOM = this.oneVerse.toDOM(domNode, this.bookCode, this.chapter, this.localizeNumber, false);
 					this.inVerseDOM = this.newParentDOM;
 				} else {
 					this.oneVerse = undefined;
