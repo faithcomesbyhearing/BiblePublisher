@@ -64,10 +64,10 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 					this.verseParentDOM = domNode;
 					this.newParentDOM = this.oneVerse.toDOM(domNode, this.bookCode, this.chapter, this.localizeNumber);
 					this.inVerseDOM = this.newParentDOM;
+				} else {
+					this.oneVerse = undefined;
+					this.inVerseDOM = null;
 				}
-			} else {
-				this.oneVerse = undefined;
-				this.inVerseDOM = null;
 			}
 			break;
 		case 'verse':

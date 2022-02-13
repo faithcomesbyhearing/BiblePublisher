@@ -121,7 +121,7 @@ Para.prototype.buildUSX = function(result) {
 };
 Para.prototype.toDOM = function(parentNode) {
 	var identStyles = [ 'ide', 'sts', 'rem', 'restore', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
-	var child = this.style === "p" ? new DOMNode('span') : new DOMNode('p');
+	var child = Para.inChapterInVerse.has(this.style) ? new DOMNode('span') : new DOMNode('p');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {
 		child.setAttribute('hidden', '');	

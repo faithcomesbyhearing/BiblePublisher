@@ -295,7 +295,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 		breakRecursively(chapterUSX);
 		if (that.oneVerse) {
 			that.breakList.push(that.oneVerse); // last verse in chapter
-		} 
+		}
 		return(that.breakList);
 	}
 	function breakRecursively(verseUSX) {
@@ -727,8 +727,8 @@ function DOMBuilder(pubVersion) {
 	this.verse = 0;
 	this.noteNum = 0;
 	this.treeRoot = null;
-	this.oneVerse = null; // temp used by embed verse
-	this.inVerseDOM = null; // temp used by embed verse
+	this.oneVerse = null; // temp used to embed verse
+	this.inVerseDOM = null; // temp used to embed verse
 	this.verseParentDOM = null;
 	this.newParentDOM = null;
 	Object.seal(this);
@@ -772,10 +772,10 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 					this.verseParentDOM = domNode;
 					this.newParentDOM = this.oneVerse.toDOM(domNode, this.bookCode, this.chapter, this.localizeNumber);
 					this.inVerseDOM = this.newParentDOM;
+				} else {
+					this.oneVerse = undefined;
+					this.inVerseDOM = null;
 				}
-			} else {
-				this.oneVerse = undefined;
-				this.inVerseDOM = null;
 			}
 			break;
 		case 'verse':
@@ -1174,7 +1174,7 @@ Para.prototype.buildUSX = function(result) {
 };
 Para.prototype.toDOM = function(parentNode) {
 	var identStyles = [ 'ide', 'sts', 'rem', 'restore', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
-	var child = this.style === "p" ? new DOMNode('span') : new DOMNode('p');
+	var child = Para.inChapterInVerse.has(this.style) ? new DOMNode('span') : new DOMNode('p');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {
 		child.setAttribute('hidden', '');	

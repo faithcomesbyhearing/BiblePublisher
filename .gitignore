@@ -5,6 +5,7 @@
 *.db2
 *.db3
 *.db4
+*.html
 temp.js
 Credentials.js
 Credentials.py
