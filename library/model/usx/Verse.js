@@ -34,14 +34,34 @@ Verse.prototype.buildUSX = function(result) {
 };
 Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumber) {
 	var reference = bookCode + ':' + chapterNum + ':' + this.number;
+	var container = new DOMNode('span');
+	container.setAttribute('class', 'v-container');
+	if (this.number) container.setAttribute('data-number', this.number);
+	if (this.altnumber) container.setAttribute('data-altnumber', this.altnumber);
+	if (this.pubnumber) container.setAttribute('data-pubnumber', this.pubnumber);
+	container.emptyElement = false;
 	var child = new DOMNode('span');
 	child.setAttribute('id', reference);
-	child.setAttribute('class', this.style);
+	child.setAttribute('class', this.style + " v-number");
 	if (this.number) child.setAttribute('data-number', this.number);
 	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
 	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
 	child.emptyElement = false;
 	child.appendText(localizeNumber.toLocal(this.number) + '&nbsp;');
-	parentNode.appendChild(child);
-	return(child);
+
+	container.appendChild(child);
+	parentNode.appendChild(container);
+	return(this.getContentDOM(container));
+};
+Verse.prototype.getContentDOM = function(verseContainer) {
+
+	var text = new DOMNode('span');
+	text.setAttribute('class', 'v-text');
+	if (this.number) text.setAttribute('data-number', this.number);
+	if (this.altnumber) text.setAttribute('data-altnumber', this.altnumber);
+	if (this.pubnumber) text.setAttribute('data-pubnumber', this.pubnumber);
+	text.emptyElement = false;
+
+	verseContainer.appendChild(text);
+	return(text);
 };

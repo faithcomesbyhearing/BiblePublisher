@@ -295,7 +295,7 @@ VerseBuilder.prototype.loadDB = function(callback) {
 		breakRecursively(chapterUSX);
 		if (that.oneVerse) {
 			that.breakList.push(that.oneVerse); // last verse in chapter
-		}
+		} 
 		return(that.breakList);
 	}
 	function breakRecursively(verseUSX) {
@@ -727,6 +727,10 @@ function DOMBuilder(pubVersion) {
 	this.verse = 0;
 	this.noteNum = 0;
 	this.treeRoot = null;
+	this.oneVerse = null; // temp used by embed verse
+	this.inVerseDOM = null; // temp used by embed verse
+	this.verseParentDOM = null;
+	this.newParentDOM = null;
 	Object.seal(this);
 }
 DOMBuilder.prototype.toDOM = function(usxRoot) {
@@ -737,8 +741,11 @@ DOMBuilder.prototype.toDOM = function(usxRoot) {
 	this.readRecursively(this.treeRoot, usxRoot);
 	return(this.treeRoot);
 };
-DOMBuilder.prototype.readRecursively = function(domParent, node) {
+DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 	var domNode;
+	var domParent = parentDom;
+	if(this.oneVerse && this.verseParentDOM == parentDom) domParent = this.inVerseDOM ;
+	this.newParentDOM = domParent;
 	//console.log('dom-parent: ', domParent.nodeName, domParent.nodeType, '  node: ', node.tagName);
 	switch(node.tagName) {
 		case 'usx':
@@ -750,20 +757,38 @@ DOMBuilder.prototype.readRecursively = function(domParent, node) {
 			domNode = node.toDOM(domParent);
 			break;
 		case 'chapter':
+			this.oneVerse = undefined;
 			if (node.number) {
 				this.chapter = node.number;
-				domParent.setAttribute('id', this.bookCode + ':' + this.chapter);
+				parentDom.setAttribute('id', this.bookCode + ':' + this.chapter);
 				this.noteNum = 0;
-				domNode = node.toDOM(domParent, this.bookCode, this.localizeNumber);
+				domNode = node.toDOM(parentDom, this.bookCode, this.localizeNumber);
 			}
 			break;
 		case 'para':
-			domNode = node.toDOM(domParent);
+			domNode = node.toDOM(parentDom);
+			if (this.oneVerse && node.style === 'p') {
+				if(node.children[0].tagName !== 'verse' && this.oneVerse) {
+					this.verseParentDOM = domNode;
+					this.newParentDOM = this.oneVerse.toDOM(domNode, this.bookCode, this.chapter, this.localizeNumber);
+					this.inVerseDOM = this.newParentDOM;
+				}
+			} else {
+				this.oneVerse = undefined;
+				this.inVerseDOM = null;
+			}
 			break;
 		case 'verse':
-			if (node.number) {
+			if (node.eid) {
+				this.oneVerse = undefined;
+				this.inVerseDOM = null;
+			} else if (node.number) {
 				this.verse = node.number;
-				domNode = node.toDOM(domParent, this.bookCode, this.chapter, this.localizeNumber);
+				this.oneVerse = node;
+				this.verseParentDOM = parentDom;
+				domNode = node.toDOM(parentDom, this.bookCode, this.chapter, this.localizeNumber);
+				this.newParentDOM = domNode;
+				this.inVerseDOM = this.newParentDOM;
 			}
 			break;
 		case 'text':
@@ -798,6 +823,7 @@ DOMBuilder.prototype.readRecursively = function(domParent, node) {
 			throw new Error('Unknown tagname ' + node.tagName + ' in DOMBuilder.readBook');
 	}
 	if ('children' in node) {
+		this.newParentDOM = domNode;
 		for (var i=0; i<node.children.length; i++) {
 			this.readRecursively(domNode, node.children[i]);
 		}
@@ -1148,12 +1174,15 @@ Para.prototype.buildUSX = function(result) {
 };
 Para.prototype.toDOM = function(parentNode) {
 	var identStyles = [ 'ide', 'sts', 'rem', 'restore', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
-	var child = new DOMNode('p');
+	var child = this.style === "p" ? new DOMNode('span') : new DOMNode('p');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {
 		child.setAttribute('hidden', '');	
 	}
 	child.emptyElement = this.emptyElement;
+	if (this.style === "p" && parentNode.childNodes.length > 0) {
+		parentNode.appendChild(new DOMNode("br"));
+	}
 	parentNode.appendChild(child);
 	return(child);
 };
@@ -1265,16 +1294,36 @@ Verse.prototype.buildUSX = function(result) {
 };
 Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumber) {
 	var reference = bookCode + ':' + chapterNum + ':' + this.number;
+	var container = new DOMNode('span');
+	container.setAttribute('class', 'v-container');
+	if (this.number) container.setAttribute('data-number', this.number);
+	if (this.altnumber) container.setAttribute('data-altnumber', this.altnumber);
+	if (this.pubnumber) container.setAttribute('data-pubnumber', this.pubnumber);
+	container.emptyElement = false;
 	var child = new DOMNode('span');
 	child.setAttribute('id', reference);
-	child.setAttribute('class', this.style);
+	child.setAttribute('class', this.style + " v-number");
 	if (this.number) child.setAttribute('data-number', this.number);
 	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
 	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
 	child.emptyElement = false;
 	child.appendText(localizeNumber.toLocal(this.number) + '&nbsp;');
-	parentNode.appendChild(child);
-	return(child);
+
+	container.appendChild(child);
+	parentNode.appendChild(container);
+	return(this.getContentDOM(container));
+};
+Verse.prototype.getContentDOM = function(verseContainer) {
+
+	var text = new DOMNode('span');
+	text.setAttribute('class', 'v-text');
+	if (this.number) text.setAttribute('data-number', this.number);
+	if (this.altnumber) text.setAttribute('data-altnumber', this.altnumber);
+	if (this.pubnumber) text.setAttribute('data-pubnumber', this.pubnumber);
+	text.emptyElement = false;
+
+	verseContainer.appendChild(text);
+	return(text);
 };
 /**
 * This class contains a Note from a USX parsed Bible
