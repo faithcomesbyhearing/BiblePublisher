@@ -29,6 +29,10 @@ DOMBuilder.prototype.toDOM = function(usxRoot) {
 	this.chapter = 0;
 	this.verse = 0;
 	this.noteNum = 0;
+	this.oneVerse = undefined; // temp used to embed verse
+	this.inVerseDOM = undefined; // temp used to embed verse
+	this.verseParentDOM = undefined;
+	this.newParentDOM = undefined;
 	this.treeRoot = new DOMNode('root');
 	this.readRecursively(this.treeRoot, usxRoot);
 	return(this.treeRoot);
@@ -36,7 +40,9 @@ DOMBuilder.prototype.toDOM = function(usxRoot) {
 DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 	var domNode;
 	var domParent = parentDom;
-	if(this.oneVerse && this.verseParentDOM == parentDom) domParent = this.inVerseDOM ;
+	if(this.oneVerse && this.verseParentDOM == parentDom) {
+		domParent = this.inVerseDOM ;
+	}
 	this.newParentDOM = domParent;
 	//console.log('dom-parent: ', domParent.nodeName, domParent.nodeType, '  node: ', node.tagName);
 	switch(node.tagName) {
@@ -58,9 +64,16 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 			}
 			break;
 		case 'para':
-			domNode = node.toDOM(parentDom);
-			if (this.oneVerse && node.style === 'p') {
-				if(node.children[0].tagName !== 'verse' && this.oneVerse) {
+			domNode = node.toDOM(parentDom); 
+			if (this.oneVerse && node.style === 'p') { 
+				var nextNotWSChild = null;
+				for (var i = 0; i < node.children.length; i++ ) { 
+					if(!(node.children[i].tagName === 'text' && node.children[i].text.trim().length == 0)) {
+						nextNotWSChild = node.children[i];
+						break;
+					} 
+				}
+				if(nextNotWSChild?.tagName !== 'verse' && this.oneVerse) {
 					this.verseParentDOM = domNode;
 					this.newParentDOM = this.oneVerse.toDOM(domNode, this.bookCode, this.chapter, this.localizeNumber, false);
 					this.inVerseDOM = this.newParentDOM;
@@ -69,6 +82,7 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 					this.inVerseDOM = null;
 				}
 			}
+			
 			break;
 		case 'verse':
 			if (node.eid) {

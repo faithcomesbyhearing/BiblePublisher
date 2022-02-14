@@ -125,13 +125,15 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 				if (node['class'] === 'p') {
 					usx.push('<para style="', node['class'], '">');
 				} else if (['v', 'v v-number'].includes(node['class'])) {
-					var parts = node.id.split(':');
-					usx.push('<verse number="', parts[2], '" style="', node['class'], '"');
-					if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
-					if (node['data-pubnumber']) usx.push(' pubnumber="', node['data-pubnumber'], '"');
-					if (that.usxVersionNum >= 3.0) usx.push( ' sid="', that.bookId, ' ', chapterNum, ':', parts[2], '"');
-					usx.push(END_EMPTY);
-					node.children = [];
+					if (node.children[0]?.text.trim().length > 0 ){
+						var parts = node.id.split(':');
+						usx.push('<verse number="', parts[2], '" style="', 'v', '"');
+						if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
+						if (node['data-pubnumber']) usx.push(' pubnumber="', node['data-pubnumber'], '"');
+						if (that.usxVersionNum >= 3.0) usx.push( ' sid="', that.bookId, ' ', chapterNum, ':', parts[2], '"');
+						usx.push(END_EMPTY);
+						node.children = [];
+					}
 				} else if (['v-container', 'v-text'].includes(node['class'])) {
 					//ignore
 				} else if (node['class'] === 'topf') {
