@@ -287,7 +287,8 @@ Para.prototype.toDOM = function(parentNode) {
 	}
 	child.emptyElement = this.emptyElement;
 	if (this.style === "p" && parentNode.childNodes.length > 0) {
-		parentNode.appendChild(new DOMNode("br"));
+		parentNode.appendBreakLine();
+		parentNode.appendBreakLine();
 	}
 	parentNode.appendChild(child);
 	return(child);

@@ -36,6 +36,11 @@ DOMNode.prototype.appendText = function(text) {
 	var node = new DOMText(text);
 	this.appendChild(node);
 };
+DOMNode.prototype.appendBreakLine = function() {
+	var node = new DOMNode('br');
+	node.emptyElement = true;
+	this.appendChild(node);
+};
 
 /**
 * This is an inner class of DOMNode, which contains only 

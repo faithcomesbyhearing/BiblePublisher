@@ -1181,7 +1181,8 @@ Para.prototype.toDOM = function(parentNode) {
 	}
 	child.emptyElement = this.emptyElement;
 	if (this.style === "p" && parentNode.childNodes.length > 0) {
-		parentNode.appendChild(new DOMNode("br"));
+		parentNode.appendBreakLine();
+		parentNode.appendBreakLine();
 	}
 	parentNode.appendChild(child);
 	return(child);
@@ -2311,6 +2312,11 @@ DOMNode.prototype.appendChild = function(node) {
 };
 DOMNode.prototype.appendText = function(text) {
 	var node = new DOMText(text);
+	this.appendChild(node);
+};
+DOMNode.prototype.appendBreakLine = function() {
+	var node = new DOMNode('br');
+	node.emptyElement = true;
 	this.appendChild(node);
 };
 
