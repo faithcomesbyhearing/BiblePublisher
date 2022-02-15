@@ -165,6 +165,12 @@ span.v {
 	/* white-space: nowrap; std, but meaningless, use &nbsp; */
 }
 /* line 412, Normal Paragraph Text */
+span.p {
+	text-align: start;
+	text-indent: 1.0rem; /* std 0.125 */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 412, Normal Paragraph Text */
 p.p {
 	text-align: start;
 	text-indent: 1.0rem; /* std 0.125 */
