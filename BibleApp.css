@@ -164,6 +164,14 @@ span.v {
 	vertical-align: text-top;
 	/* white-space: nowrap; std, but meaningless, use &nbsp; */
 }
+span.v-number {
+	font-family: sans-serif; /* non-std */
+	font-size: 0.66rem;
+	color: #777777; /* non-std */
+	text-align: start;
+	vertical-align: text-top;
+	/* white-space: nowrap; std, but meaningless, use &nbsp; */
+}
 /* line 412, Normal Paragraph Text */
 span.p {
 	text-align: start;

@@ -773,7 +773,7 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 			break;
 		case 'para':
 			domNode = node.toDOM(parentDom); 
-			if (this.oneVerse && node.style === 'p') { 
+			if (this.oneVerse && Para.inChapterInVerse.has(node.style)) {
 				var nextNotWSChild = null;
 				for (var i = 0; i < node.children.length; i++ ) { 
 					if(!(node.children[i].tagName === 'text' && node.children[i].text.trim().length == 0)) {
@@ -806,7 +806,12 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 			}
 			break;
 		case 'text':
-			node.toDOM(domParent, this.bookCode, this.chapter);
+			var parent = domParent;
+			if (this.oneVerse && this.inVerseDOM == domParent) { 
+				// open a v-tex span 
+				parent = this.oneVerse.getVerseTextDOM(domParent);
+			}
+			node.toDOM(parent, this.bookCode, this.chapter);
 			domNode = domParent;
 			break;
 		case 'char':
@@ -928,7 +933,7 @@ HTMLPageBuilder.prototype.outputFile = function (row) {
 	var css = '\n<LINK REL=StyleSheet HREF="BibleApp.css" TYPE="text/css" MEDIA=screen>';
 	html = html.concat(css);
 	var folder = `${that.versionPath}${this.version}/`;
-	var outputFile = `${folder}/${chap}.html`;
+	var outputFile = `${folder}${chap}.html`;
 	this.fs.mkdir(folder, {recursive: true}, (err) => {if (err) that.fatalError(err, 'make dir')});
 	this.fs.writeFile(outputFile, html, function (err) {
 		if (err) that.fatalError(err, 'write generated ${book[0]} ${book[1]}');
@@ -1367,7 +1372,7 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 	container.emptyElement = false;
 	var child = new DOMNode('span');
 	child.setAttribute('id', reference);
-	child.setAttribute('class', this.style + " v-number");
+	child.setAttribute('class', this.style + "-number");
 	if (this.number) child.setAttribute('data-number', this.number);
 	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
 	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
@@ -1376,9 +1381,9 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 
 	container.appendChild(child);
 	parentNode.appendChild(container);
-	return(this.getContentDOM(container));
+	return(container);
 };
-Verse.prototype.getContentDOM = function(verseContainer) {
+Verse.prototype.getVerseTextDOM = function(verseContainer) {
 
 	var text = new DOMNode('span');
 	text.setAttribute('class', 'v-text');

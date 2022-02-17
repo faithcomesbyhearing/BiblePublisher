@@ -65,7 +65,7 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 			break;
 		case 'para':
 			domNode = node.toDOM(parentDom); 
-			if (this.oneVerse && node.style === 'p') { 
+			if (this.oneVerse && Para.inChapterInVerse.has(node.style)) {
 				var nextNotWSChild = null;
 				for (var i = 0; i < node.children.length; i++ ) { 
 					if(!(node.children[i].tagName === 'text' && node.children[i].text.trim().length == 0)) {
@@ -98,7 +98,12 @@ DOMBuilder.prototype.readRecursively = function(parentDom, node) {
 			}
 			break;
 		case 'text':
-			node.toDOM(domParent, this.bookCode, this.chapter);
+			var parent = domParent;
+			if (this.oneVerse && this.inVerseDOM == domParent) { 
+				// open a v-tex span 
+				parent = this.oneVerse.getVerseTextDOM(domParent);
+			}
+			node.toDOM(parent, this.bookCode, this.chapter);
 			domNode = domParent;
 			break;
 		case 'char':

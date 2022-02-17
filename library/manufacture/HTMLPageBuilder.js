@@ -34,7 +34,7 @@ HTMLPageBuilder.prototype.outputFile = function (row) {
 	var css = '\n<LINK REL=StyleSheet HREF="BibleApp.css" TYPE="text/css" MEDIA=screen>';
 	html = html.concat(css);
 	var folder = `${that.versionPath}${this.version}/`;
-	var outputFile = `${folder}/${chap}.html`;
+	var outputFile = `${folder}${chap}.html`;
 	this.fs.mkdir(folder, {recursive: true}, (err) => {if (err) that.fatalError(err, 'make dir')});
 	this.fs.writeFile(outputFile, html, function (err) {
 		if (err) that.fatalError(err, 'write generated ${book[0]} ${book[1]}');

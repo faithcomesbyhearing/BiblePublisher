@@ -42,7 +42,7 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 	container.emptyElement = false;
 	var child = new DOMNode('span');
 	child.setAttribute('id', reference);
-	child.setAttribute('class', this.style + " v-number");
+	child.setAttribute('class', "v-number");
 	if (this.number) child.setAttribute('data-number', this.number);
 	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
 	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
@@ -51,9 +51,9 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 
 	container.appendChild(child);
 	parentNode.appendChild(container);
-	return(this.getContentDOM(container));
+	return(container);
 };
-Verse.prototype.getContentDOM = function(verseContainer) {
+Verse.prototype.getVerseTextDOM = function(verseContainer) {
 
 	var text = new DOMNode('span');
 	text.setAttribute('class', 'v-text');
