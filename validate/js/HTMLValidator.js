@@ -122,9 +122,7 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 				}
 				break;
 			case 'span':
-				if (node['class'] === 'p') {
-					usx.push('<para style="', node['class'], '">');
-				} else if (['v', 'v v-number'].includes(node['class'])) {
+				if (['v', 'v-number'].includes(node['class'])) {
 					if (node.children[0]?.text.trim().length > 0 ){
 						var parts = node.id.split(':');
 						usx.push('<verse number="', parts[2], '" style="', 'v', '"');
@@ -133,6 +131,15 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 						if (that.usxVersionNum >= 3.0) usx.push( ' sid="', that.bookId, ' ', chapterNum, ':', parts[2], '"');
 						usx.push(END_EMPTY);
 						node.children = [];
+					}
+				} else if(Para.isKnownStyle(node['class'])) {
+					if (node.emptyElement) {
+						usx.push('<para style="', node['class'], '"', END_EMPTY);
+					} else {
+						usx.push('<para style="', node['class'], '">');
+					}
+					if (node.hidden) {
+						usx.push(node.hidden);
 					}
 				} else if (['v-container', 'v-text'].includes(node['class'])) {
 					//ignore
@@ -236,10 +243,10 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 					}
 					break;
 				case 'span':
-					if (node['class'] === 'p' && ! node.emptyElement) {
-						usx.push('</para>');
-					} else if (['v-container', 'v v-number', 'v-text', 'v'].includes(node['class'])) {
+					if (['v-container', 'v-number', 'v-text', 'v'].includes(node['class'])) {
 						// do nothing
+					} else if (Para.isKnownStyle(node['class']) && !node.emptyElement) {
+						usx.push('</para>');
 					} else if (node['class'] === 'topf' || node['class'] === 'topx') {
 						usx.push('</note>');
 					} else if (node.hidden) {
