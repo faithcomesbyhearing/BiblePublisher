@@ -280,7 +280,8 @@ Para.prototype.buildUSX = function(result) {
 };
 Para.prototype.toDOM = function(parentNode) {
 	var identStyles = [ 'ide', 'sts', 'rem', 'restore', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
-	var child = this.style === 'p' ? new DOMNode('span') : new DOMNode('p');
+//	var child = this.style === 'p' ? new DOMNode('span') : new DOMNode('p');
+	var child = new DOMNode('span');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {
 		child.setAttribute('hidden', '');	
@@ -288,8 +289,8 @@ Para.prototype.toDOM = function(parentNode) {
 	child.emptyElement = this.emptyElement;
 	if (this.style === "p" && parentNode.childNodes.length > 0) {
 		parentNode.appendBreakLine();
-		parentNode.appendBreakLine();
 	}
+	parentNode.appendBreakLine();
 	parentNode.appendChild(child);
 	return(child);
 };
@@ -338,7 +339,7 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 	container.emptyElement = false;
 	var child = new DOMNode('span');
 	child.setAttribute('id', reference);
-	child.setAttribute('class', this.style + " v-number");
+	child.setAttribute('class', "v-number");
 	if (this.number) child.setAttribute('data-number', this.number);
 	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
 	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
@@ -347,9 +348,9 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 
 	container.appendChild(child);
 	parentNode.appendChild(container);
-	return(this.getContentDOM(container));
+	return(container);
 };
-Verse.prototype.getContentDOM = function(verseContainer) {
+Verse.prototype.getVerseTextDOM = function(verseContainer) {
 
 	var text = new DOMNode('span');
 	text.setAttribute('class', 'v-text');

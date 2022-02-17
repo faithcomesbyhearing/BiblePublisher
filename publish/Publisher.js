@@ -937,10 +937,11 @@ HTMLPageBuilder.prototype.outputFile = function (row) {
 	if (!this.fs.existsSync(folder)) { 
 		this.fs.mkdir(folder, {recursive: false}, (err) => {if (err) that.fatalError(err, 'make dir')});
 	}
-	this.fs.writeFile(outputFile, html, function (err) {
-		if (err) that.fatalError(err, `write generated ${book[0]} ${book[1]}`);
-		console.log('Generated Stored');
-	});
+	this.fs.writeFileSync(outputFile, html);
+	// this.fs.writeFile(outputFile, html, function (err) {
+	// 	if (err) that.fatalError(err, `write generated ${book[0]} ${book[1]}`);
+	// 	console.log('Generated Stored');
+	// });
 };
 HTMLPageBuilder.prototype.fatalError = function (err, source) {
 	console.log('FATAL ERROR ', err, ' AT ', source);

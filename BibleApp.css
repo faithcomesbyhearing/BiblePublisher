@@ -144,7 +144,7 @@ span.ipi {
   color: #777777; /* non std */
 }
 /* line 344, Chapter Number Format */
-span.c {
+p.c {
 	font-size: 1.5rem;
 	color: #2A48B4; /* non-std */
 	text-align: start;

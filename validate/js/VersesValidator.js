@@ -86,8 +86,8 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 					break;
 				case XMLNodeType.ATTR_VALUE:
 					element[attrName] = tokenValue;
-					if (attrName === 'class' && tokenValue === 'v') {
-						outputVerse(verseId);
+					if (attrName === 'class' && tokenValue === 'v-number') {
+						if(verseId !== element['id']) outputVerse(verseId);
 						verseId = element['id'];
 					}
 					break;
@@ -113,7 +113,7 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 							}
 							break;
 						case 'span':
-							if (!Para.inChapterNotVerse.has(clas) && !isAncestorFootnote(elementStack)) {
+							if (!Para.inChapterNotVerse.has(clas) && !isAncestorFootnote(elementStack) && clas !== 'v-number') {
 								verse.push(tokenValue);
 							}
 							break;
