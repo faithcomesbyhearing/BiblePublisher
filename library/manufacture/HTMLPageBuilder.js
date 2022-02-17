@@ -35,9 +35,11 @@ HTMLPageBuilder.prototype.outputFile = function (row) {
 	html = html.concat(css);
 	var folder = `${that.versionPath}${this.version}/`;
 	var outputFile = `${folder}${chap}.html`;
-	this.fs.mkdir(folder, {recursive: true}, (err) => {if (err) that.fatalError(err, 'make dir')});
+	if (!this.fs.existsSync(folder)) { 
+		this.fs.mkdir(folder, {recursive: false}, (err) => {if (err) that.fatalError(err, 'make dir')});
+	}
 	this.fs.writeFile(outputFile, html, function (err) {
-		if (err) that.fatalError(err, 'write generated ${book[0]} ${book[1]}');
+		if (err) that.fatalError(err, `write generated ${book[0]} ${book[1]}`);
 		console.log('Generated Stored');
 	});
 };

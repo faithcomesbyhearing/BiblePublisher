@@ -934,9 +934,11 @@ HTMLPageBuilder.prototype.outputFile = function (row) {
 	html = html.concat(css);
 	var folder = `${that.versionPath}${this.version}/`;
 	var outputFile = `${folder}${chap}.html`;
-	this.fs.mkdir(folder, {recursive: true}, (err) => {if (err) that.fatalError(err, 'make dir')});
+	if (!this.fs.existsSync(folder)) { 
+		this.fs.mkdir(folder, {recursive: false}, (err) => {if (err) that.fatalError(err, 'make dir')});
+	}
 	this.fs.writeFile(outputFile, html, function (err) {
-		if (err) that.fatalError(err, 'write generated ${book[0]} ${book[1]}');
+		if (err) that.fatalError(err, `write generated ${book[0]} ${book[1]}`);
 		console.log('Generated Stored');
 	});
 };
@@ -1372,7 +1374,7 @@ Verse.prototype.toDOM = function(parentNode, bookCode, chapterNum, localizeNumbe
 	container.emptyElement = false;
 	var child = new DOMNode('span');
 	child.setAttribute('id', reference);
-	child.setAttribute('class', this.style + "-number");
+	child.setAttribute('class', "v-number");
 	if (this.number) child.setAttribute('data-number', this.number);
 	if (this.altnumber) child.setAttribute('data-altnumber', this.altnumber);
 	if (this.pubnumber) child.setAttribute('data-pubnumber', this.pubnumber);
@@ -3214,10 +3216,10 @@ PublisherMain.prototype.process = function(inputDir, outputDir, bibleId, iso3, i
 			process.exit(1);
 		} else {
 			console.log('Success, Bible created');
+			var htmlPageBuilder = new HTMLPageBuilder(bibleId, outputDir, database);
+			htmlPageBuilder.process();
 		}
 	});
-	var htmlPageBuilder = new HTMLPageBuilder(bibleId, outputDir, database);
-	htmlPageBuilder.process();
 };
 
 function usageMessage() {
