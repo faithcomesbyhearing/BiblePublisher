@@ -528,7 +528,7 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 						case 'span':
 							if (!Para.inChapterNotVerse.has(clas) && !isAncestorFootnote(elementStack) && clas !== 'v-number') {
 								verse.push(tokenValue);
-							} console.log(clas);
+							}
 							break;
 					}
 					break;
