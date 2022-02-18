@@ -11,6 +11,7 @@ cat ../library/manufacture/StyleIndexBuilder.js >> Publisher.js
 cat ../library/manufacture/StyleUseBuilder.js >> Publisher.js
 cat ../library/manufacture/DOMBuilder.js >> Publisher.js
 cat ../library/manufacture/HTMLBuilder.js >> Publisher.js
+cat ../library/manufacture/HTMLPageBuilder.js >> Publisher.js
 cat ../library/model/usx/USX.js >> Publisher.js
 cat ../library/model/usx/Book.js >> Publisher.js
 cat ../library/model/usx/Cell.js >> Publisher.js
@@ -50,3 +51,7 @@ cat ../library/manufacture/PublisherMain.js >> Publisher.js
 
 node Publisher.js $*
 
+echo "Generating zip file with the html content from HTMLPageBuilder"
+cp -R ../BibleApp.css  $2/$3
+cd $2
+zip -r ${3}.zip ./$3/*

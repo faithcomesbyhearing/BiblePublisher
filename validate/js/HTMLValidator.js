@@ -122,14 +122,27 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 				}
 				break;
 			case 'span':
-				if (node['class'] === 'v') {
-					var parts = node.id.split(':');
-					usx.push('<verse number="', parts[2], '" style="', node['class'], '"');
-					if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
-					if (node['data-pubnumber']) usx.push(' pubnumber="', node['data-pubnumber'], '"');
-					if (that.usxVersionNum >= 3.0) usx.push( ' sid="', that.bookId, ' ', chapterNum, ':', parts[2], '"');
-					usx.push(END_EMPTY);
-					node.children = [];
+				if (['v', 'v-number'].includes(node['class'])) {
+					if (node.children[0]?.text.trim().length > 0 ){
+						var parts = node.id.split(':');
+						usx.push('<verse number="', parts[2], '" style="', 'v', '"');
+						if (node['data-altnumber']) usx.push(' altnumber="', node['data-altnumber'], '"');
+						if (node['data-pubnumber']) usx.push(' pubnumber="', node['data-pubnumber'], '"');
+						if (that.usxVersionNum >= 3.0) usx.push( ' sid="', that.bookId, ' ', chapterNum, ':', parts[2], '"');
+						usx.push(END_EMPTY);
+						node.children = [];
+					}
+				} else if(Para.isKnownStyle(node['class'])) {
+					if (node.emptyElement) {
+						usx.push('<para style="', node['class'], '"', END_EMPTY);
+					} else {
+						usx.push('<para style="', node['class'], '">');
+					}
+					if (node.hidden) {
+						usx.push(node.hidden);
+					}
+				} else if (['v-container', 'v-text'].includes(node['class'])) {
+					//ignore
 				} else if (node['class'] === 'topf') {
 					usx.push('<note caller="', node.caller, '" style="f">');
 					clearTextChildren(node); // clear note button
@@ -196,6 +209,8 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 			case 'TEXT':
 				usx.push(node.text);
 				break;
+			case 'br':
+				break;
 			default:
 				throw new Error('unexpected HTML element ' + node.tagName + '.');		
 		}
@@ -228,8 +243,10 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 					}
 					break;
 				case 'span':
-					if (node['class'] === 'v') {
+					if (['v-container', 'v-number', 'v-text', 'v'].includes(node['class'])) {
 						// do nothing
+					} else if (Para.isKnownStyle(node['class']) && !node.emptyElement) {
+						usx.push('</para>');
 					} else if (node['class'] === 'topf' || node['class'] === 'topx') {
 						usx.push('</note>');
 					} else if (node.hidden) {
@@ -256,7 +273,7 @@ HTMLValidator.prototype.validateBook = function(inputPath, outPath, index, files
 					break;
 				case 'figcaption': // part of figure in usx
 					break;
-				case 'wbr':
+				case 'br':
 					break;
 				default:
 					throw new Error('unexpected HTML element ' + node.tagName + '.');

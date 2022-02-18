@@ -122,12 +122,17 @@ Para.prototype.buildUSX = function(result) {
 };
 Para.prototype.toDOM = function(parentNode) {
 	var identStyles = [ 'ide', 'sts', 'rem', 'restore', 'h', 'toc1', 'toc2', 'toc3', 'toca2', 'toca3' ];
-	var child = new DOMNode('p');
+//	var child = this.style === 'p' ? new DOMNode('span') : new DOMNode('p');
+	var child = new DOMNode('span');
 	child.setAttribute('class', this.style);
 	if (identStyles.indexOf(this.style) >= 0) {
 		child.setAttribute('hidden', '');	
 	}
 	child.emptyElement = this.emptyElement;
+	if (this.style === "p" && parentNode.childNodes.length > 0) {
+		parentNode.appendBreakLine();
+	}
+	parentNode.appendBreakLine();
 	parentNode.appendChild(child);
 	return(child);
 };
@@ -494,8 +499,8 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 					break;
 				case XMLNodeType.ATTR_VALUE:
 					element[attrName] = tokenValue;
-					if (attrName === 'class' && tokenValue === 'v') {
-						outputVerse(verseId);
+					if (attrName === 'class' && tokenValue === 'v-number') {
+						if(verseId !== element['id']) outputVerse(verseId);
 						verseId = element['id'];
 					}
 					break;
@@ -521,7 +526,7 @@ VersesValidator.prototype.generateChaptersFile = function(outPath, callback) {
 							}
 							break;
 						case 'span':
-							if (!Para.inChapterNotVerse.has(clas) && !isAncestorFootnote(elementStack)) {
+							if (!Para.inChapterNotVerse.has(clas) && !isAncestorFootnote(elementStack) && clas !== 'v-number') {
 								verse.push(tokenValue);
 							}
 							break;

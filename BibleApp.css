@@ -1,0 +1,1024 @@
+/**
+* This css file pertains to the StatusBar
+*/
+body {
+	margin: 0;
+	width: 100%;
+}
+#statusRoot {
+	margin: 0;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width:100%;
+	z-index: 1000;
+	
+	background-color: #2E9EC9;
+	
+	padding: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+#tocCell {
+	padding-left: 2%;
+	padding-right: 1%;
+	padding-bottom: 0;
+}
+#searchCell {
+	padding-left: 1%;
+	padding-right: 1%;
+	padding-bottom: 0;
+}
+#labelCell {
+	padding-left: auto;
+	padding-right: auto;
+	padding-bottom: 0;
+}
+#audioCell {
+	padding-left: 1%;
+	padding-right: 1%;
+	padding-bottom: 0;
+	display: none;
+}
+#videoCell {
+	padding-left: 1%;
+	padding-right: 1%;	
+	padding-bottom: 0;
+}
+#settingsCell {
+	padding-left: 1%;
+	padding-right: 2%;
+	padding-bottom: 0;
+}
+
+
+
+
+
+/**
+* This css files pertains to the CodexView
+*/
+#codexRoot {
+	position: absolute; /* Needed because codexRoot.style.y is set in CodexView */
+	width: 86%;
+	margin-left: 8%;
+	margin-right: 6%;
+	font-family: serif;
+	font-size: 1.0rem; /* 14pt std */
+	color: #000000;
+	line-height: 1.3; /* non-std */
+	text-align: start;
+	z-index: 0;
+}
+/* Paged Layout */
+/*body {// not working
+	page: auto;
+	break-before: avoid-page;
+	orphans: 2;
+	widows: 2;
+	column-count: 3;
+	column-gap: 2.5%;
+}*/
+/* remove scrollbars, ideally only for #codexRoot
+but, I have only been able to do it for all. */
+/* scrollbars are absent without this 1/21/2016 */
+/*::-webkit-scrollbar { 
+    display: none;
+}*/
+/* article element is at beginning of each book */
+article { /* non-std */
+	margin-bottom: 1.0in;
+}
+/* line 76, Introduction Major Title */
+span.imt, span.imt1 {
+	font-weight: bold;
+	font-size: 1.24rem;
+	text-align: center;
+	margin-bottom: 4pt;
+	margin-top: 8pt;
+	color: #2A48B4; /* non-std */
+}
+/* line 145, Introduction Section heading, Level 1 */
+span.is, span.is1 {
+	font-weight: bold;
+	font-size: 1.16rem;
+	text-align: center;
+	margin-bottom: 4pt;
+	margin-top: 8pt;
+	color: #2A48B4; /* non-std */
+}
+/* line 171, Introduction - Outline Title */
+span.iot {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 4pt;
+  margin-top: 8pt;
+  color: #777777; /* non-std */
+}
+/* line 179, Introduction Outline Text Level 1 */
+span.io, span.io1 {
+	text-align: start;
+	margin-left: 1.0rem; /* std 0.5in */
+	margin-right: 0;
+	color: #777777; /* non-std */
+}
+/* line 191, Introduction Outline Text Level 2 */
+span.io2 {
+	text-align: start;
+	margin-left: 2.0rem; /* std 0.75in */
+	margin-right: 0;
+	color: #777777; /* non-std */
+}
+/* line 214, Introduction Prose Paragraph (basic) */
+span.ip {
+	text-align: start;
+	text-indent: 1.0rem; /* std 0.125in */
+	color: #777777; /* non-std */
+}
+/* line 225, Introduction - Indented Para - first line indent */
+span.ipi {
+  text-indent: 1.0rem; /* std 0.125in */
+  text-align: start;
+  /*margin-left: 0.25in; std */
+  /*margin-right: 0.25in; std */
+  color: #777777; /* non std */
+}
+/* line 344, Chapter Number Format */
+p.c {
+	font-size: 1.5rem;
+	color: #2A48B4; /* non-std */
+	text-align: start;
+	margin-top: 8pt;
+	margin-bottom: 4pt;
+}
+/* p.cl Chapter Label is not yet supported
+the p.cl appears once at the beginning of Psalms
+and needs to be repeated with each chapter.
+Supporting this is a TBD */
+/* line 388, Verse Number Format */
+span.v {
+	font-family: sans-serif; /* non-std */
+	font-size: 0.66rem;
+	color: #777777; /* non-std */
+	text-align: start;
+	vertical-align: text-top;
+	/* white-space: nowrap; std, but meaningless, use &nbsp; */
+}
+span.v-number {
+	font-family: sans-serif; /* non-std */
+	font-size: 0.66rem;
+	color: #777777; /* non-std */
+	text-align: start;
+	vertical-align: text-top;
+	/* white-space: nowrap; std, but meaningless, use &nbsp; */
+}
+/* line 412, Normal Paragraph Text */
+span.p {
+	text-align: start;
+	text-indent: 1.0rem; /* std 0.125 */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 412, Normal Paragraph Text */
+p.p {
+	text-align: start;
+	text-indent: 1.0rem; /* std 0.125 */
+}
+/* line 418, Normal Paragraph w/o Indentation */
+span.m {
+	text-align: start;
+	text-indent: 0;
+}
+/* line 452, Paragraph Indented Level 1 */
+span.pi, span.pi1 {
+	text-align: start;
+	text-indent: 1.0rem; /* std 0.125in */
+	margin-left: 1.0rem; /* std 0.25in */
+	margin-right: 1.0rem; /* std 0.25in */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 484, Paragraph - Centered (for Inscription) */
+span.pc {
+  text-align: center;
+  margin-top: 0; /* non std */
+  margin-bottom: 0; /* non std */
+  display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 489, Start of Blockquote */
+span.mi {
+	text-align: start;
+	margin-left: 1.0rem; /* std 0.25in */
+	margin-right: 1.0rem; /* std 0.25in */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 496, Continuation Paragraph as start of Chapter */
+span.nb {
+	text-align: start;
+	text-indent: 0;
+}
+/* line 506, Poetry First Line */
+span.q, span.q1 {
+	text-align: start;
+	text-indent: -2.5rem; /* std -1.0in */
+	margin-left: 3.0rem; /* std 1.25in */
+	margin-right: 0;
+	margin-top: 0; /* non-std */
+	margin-bottom: 0; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 520, Poetry Second Line */
+span.q2 {
+	text-align: start;
+	text-indent: -1.5rem; /* std -0.75in */
+	margin-left: 3.0rem; /* std 1.25in */
+	margin-right: 0;
+	margin-top: 0; /* non-std */
+	margin-bottom: 0; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 541, Poetry Centered */
+span.qc {
+	text-align: center;
+}
+/* line 551, Poetry Text - Selah */
+span.qs {
+	display: block; /* non-std */
+	text-align: right; /* non-std left is std */
+	/* This needs to right align with the poetry, not the width of the page. */
+	font-style: italic;
+}
+/* line 557, Poetry, Acrostic Heading|Marker */
+span.qa {
+	font-size: 1.16rem;
+	font-style: italic;
+	text-align: start;
+}
+/* line 597, span.b is blank line */
+span.b {
+	text-indent: start;
+	font-size: 0.83rem;
+}
+/* line 603, Book Title Main */
+span.mt, span.mt1 {
+	font-weight: bold;
+	font-size: 1.66rem;
+	text-align: center;
+	margin-bottom: 4pt;
+	margin-top: 8pt;
+	color: #2A48B4; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 621, Book Title Above Main TitleSmaller */
+span.mt2 {
+	font-size: 1.33rem;
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 2pt;
+	color: #2A48B4; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 629, Book Title Smallest */
+span.mt3 {
+	font-weight: bold;
+	font-size: 1.16rem;
+	text-align: center;
+	margin-top: 2pt;
+	margin-bottom: 2pt;
+	color: #2A48B4; /* non-std */
+}
+/* line 638, Book title level 4 */
+span.mt4 {
+	text-align: center;
+	margin-top: 2pt;
+	margin-bottom: 2pt;
+	color: #2A48B4; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 671, Major Section Heading */
+span.ms, span.ms1 {
+	font-weight: bold;
+	font-size: 1.16rem;
+	text-align: center;
+	margin-bottom: 4pt;
+	margin-top: 16pt;
+	color: #2A48B4; /* non-std */
+}
+/* line 707, Heading - Major Section Range References */
+span.mr {
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 4pt;
+  margin-top: 4pt; /* non std */
+  color: #2A48B4; /* non-std */
+  display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 714, Heading - Section Level 1 */
+span.s, span.s1 {
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 4pt;
+	margin-top: 8pt;
+	color: #2A48B4; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 730, Heading - Section Level 2 */
+span.s2 {
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 4pt;
+	margin-top: 8pt;
+	color: #2A48B4; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 761, Heading - Parallel References */
+span.r {
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 4pt;
+	color: #2A48B4; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 768, Speaker Name */
+span.sp {
+	font-style: italic;
+	text-align: start;
+	margin-bottom: 4pt;
+	margin-top: 8pt;
+	display: inline-block; /* add to text-indent work with inline element */
+}
+/* line 776, Descriptive Title */
+span.d {
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 4pt;
+	margin-top: 4pt;
+	color: #2A48B4; /* non-std */
+	display: inline-block; /* add to text-indent work with inline element */
+}
+table.usx {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+}
+/* line 784, Table - Row */
+tr.usx {
+  width: 100%;
+}
+/* line 792, Table - Column 1 Heading */
+td.th1, td.th2, td.th3, td.th4, td.th5 {
+	font-style: italic;
+	text-align: start;
+	padding-left: 5%; /* non std */
+	padding-right: 5%; /* non std */
+	border-bottom-style: dotted; /* non std */
+	border-width: thin; /* non std */
+}
+/* line 821, Table - Cell */
+td.tc1, td.tc2, td.tc3, td.tc4, td.tc5 {
+	text-align: start;
+	padding-left: 5%; /* non std */
+	padding-right: 5%; /* non std */
+	border-bottom-style: dotted; /* non std */
+	border-width: thin; /* non std */
+}
+/* line 821, Table - Cell */
+td.tcr1, td.tcr2, td.tcr3, td.tcr4, td.tcr5 {
+	text-align: end;
+	padding-left: 5%; /* non std */
+	padding-right: 5%; /* non std */
+	border-bottom-style: dotted; /* non std */
+	border-width: thin; /* non std */
+}
+/* line 956, Out indented list item level 1 */
+span.li, span.li1 {
+	text-align: start;
+	text-indent: -1.5rem; /* std -0.375in */
+	margin-left: 2.0rem; /* std 0.5in */
+	margin-right: 0;
+}
+/* footnote references */
+span.topf, span.topx {
+	text-align: start;
+	color: #FFB4B5;/* non-std */
+}
+/* line 991, footnotes */
+span.f, span.ft {
+	text-indent: start;
+	/* font-style: italic; */
+}
+/* line 1012, Footnote - Keyword i.e. word that footnote explains */
+span.fk {
+  font-weight: bold;
+  font-style: italic;
+  text-align: start;
+}
+/* line 1025, footnote alternate translation */
+span.fqa {
+	text-align: start;
+	font-style: italic;
+}
+/* line 1043, verse number embedded in footnote */
+span.fv {
+	text-align: start;
+	vertical-align: text-top;
+	font-size: 0.66rem; 
+	font-family: sans-serif; /* non-std? */
+}
+/* line 1055, Footnote - Additional Caller to Previous Note */
+span.fm {
+  text-align: start;
+  vertical-align: text-top;
+  font-size; 0.66rem;
+}
+/* line 1062, cross references */
+span.x, span.xt {
+	text-align: start;
+}
+/* line 1105, Cross Reference - Inline Quotation References */
+span.rq {
+	display: block; /* inconsistent with DBL, but consistent with usfm spec */
+	font-size: 0.83rem;
+	font-style: italic;
+	text-align: end; /* inconsistent with DBL, but consistent with usfm spec */
+}
+/* line 1118, Name of Diety */
+span.nd {
+	text-align: start;
+	font-variant: small-caps;
+}
+/* line 1124, Transliterated Word */
+span.tl {
+	font-style: italic;
+	text-align: start;
+}
+/* line 1136, Special Text - Quoted book title */
+span.bk {
+  font-style: italic;
+  text-align: start;
+}
+/* line 1148, Proper Name */
+span.pn {
+	text-align: start;
+	font-weight: bold;
+	text-decoration: underline;
+}
+/* line 1163, Words of Jesus */
+span.wj {
+	color: #FF3333; /* std is #FF0000 */
+	text-align: start;
+}
+/* line 1169, Special Text - Keyword */
+span.k {
+  font-weight: bold;
+  font-style: italic;
+  text-align: start;
+}
+/* line 1189, Translator's Addition */
+span.add {
+	/* font-weight: bold; std */
+	font-style: italic;
+	text-align: start;
+}
+/* line 1207, Character - Italic Text */
+span.it {
+  font-style: italic;
+  text-align: start;
+}
+/* line 1213, Character - Bold Text */
+span.bd {
+  font-weight: bold;
+  text-align: start;
+}
+/* line 1232, Character - Small Caps */
+span.sc {
+  font-variant: small-caps;
+  text-align: start;
+}
+/* line 1238, Break - Page Break */
+span.pb {
+  text-align: start;
+  margin-bottom: 1.0in;
+  /* What should I do here to simulate a page break */
+}
+/* line 1254, Peripheral Ref - Wordlist Entry */
+span.w {
+  text-align: start;
+  font-weight: bold; /* non std */
+}
+/* line 1274, Peripherals - Content Division Marker */
+span.periph {
+   display: none;
+}
+/* line 1406, OBSOLETE toc Peripherals - Front Matter Table of Contents */
+span.toc {
+	display: none;
+}/*
+* Copyright.css
+*/
+span.copyright {
+	font-family: sans-serif;
+	font-size: 0.66rem;
+	color: #777777;
+	vertical-align: text-middle; /* to vertically align text to hand in copylink */
+}
+span.copylink {
+	font-size: 1.0rem;
+	vertical-align: text-top;
+	color: blue;
+}
+#attribution {
+  background-color: rgba(76,192,133,0.1);/*rgba(255, 246, 233, 0.9);*/
+  color: #000000;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  text-align: right; /* Needed to right align X */
+}
+span.attribVers {
+	font-size: 1.33rem;
+	text-align: center;
+	margin-bottom: 0px;
+}
+div.attribCopy {
+	font-size: 1.0rem;
+	text-align: start;
+	/*margin-top: 0px;*/
+}
+span.attribLink {
+	color: blue;
+	text-decoration: underline;
+	text-align: center;
+	direction: ltr;
+}
+#closeIcon {
+	margin-top: 7px;
+	margin-bottom: 0px;
+}
+span.copyTitle {
+	margin-bottom: 0px;
+	font-family: sans-serif;
+	font-size: 1.5rem;
+	color: #2E9EC9;
+}
+/*span.copyAbbr {
+	margin-bottom: 0px;
+	font-family: sans-serif;
+	font-size: 1.4rem;
+	color: #2E9EC9;
+	direction: ltr;
+}*/
+
+/**
+* This css files pertains to the HistoryView
+*/
+
+#historyRoot {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  z-index: 200;
+  /*border-style: solid; for testing */
+}
+#historyTabBar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+li.historyTab {
+  margin: 0;
+  padding: 2px;
+  text-align: right;
+}
+button.historyTabBtn {
+  background-color: #CFFFF6;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+}/**
+* This css files pertains to the SearchView
+*/
+#searchRoot {
+	position: absolute; /* Needed because searchRoot.style.y is set in AppControllerView */
+	width:80%;
+	margin-top: 3%;
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-bottom: 10%;
+	z-index: 30;
+}
+.searchBorder {
+	display: inline-block;
+	position: static;
+	/* width and padding are set dynamically in SearchView */
+	border: solid 1px #d2d2d2;
+	border-radius: 2.0em;
+	box-shadow: 0 1px 0px rgba(0,0,0,.1);
+	background: #f1f1f1;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+}
+.searchField {
+	font-family: sans-serif;
+	font-size:1.0rem;
+	/* width is set dynamically in SearchView */
+	background: #fff;
+	padding: 6px 6px 6px 8px;
+	border: solid 1px #bcbbbb;
+	border-radius: 1.0em;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+}
+/* Search Results Book Name */
+span.conBook {
+	font-family: sans-serif;
+	font-size: 1.3rem;
+	text-align: start;
+	/*margin-top: 8pt;*/
+	margin-bottom: 0;
+}
+hr {
+	margin-top: 0;
+}
+span.conRef {
+	font-family: sans-serif;
+	font-size: 1.0rem;
+	text-align: start;
+	font-weight: bold;
+}
+span.conVerse {
+	font-family: serif;
+	font-size: 1.0rem;
+	text-align: start;	
+}
+span.conWord {
+	font-weight: bold;
+}
+span.conMore {
+	margin: 0;
+	padding: 0;
+	font-size: 4.0rem;
+	font-weight: 900;
+	line-height: 2.0rem;
+	color: #2A48B4;
+	border: solid;
+	border-width: thin;
+	border-color: grey;
+}
+/**
+* This css file pertains to the TableContentsView
+*/
+
+#tocRoot {
+	position: absolute; /* Needed because tocRoot.style.y is set in AppControllerView */
+	left: 0;
+	top: 0;
+	margin-top: 0;
+	margin-bottom: 0%; /* this doesn't seem to work */
+	margin-left: 0;
+	margin-right: 0;
+	z-index: 100;
+	width: 100%;
+}
+/* Table of Contents Page Format */
+div.tocPage { /* non-std */
+	padding-left: 10%;
+	padding-right: 10%;
+}
+/* Table of Contents Book Name Format */
+p.tocBook { /* non-std */
+	font-family: sans-serif;
+	font-size: 1.5rem;
+	color: #777777;
+	text-align: start;
+	overflow-x: visible;
+}
+span.tocBook { /* non-std */
+	font-family: sans-serif;
+	font-size: 1.5rem;
+	color: #777777;
+	text-align: start;
+	overflow-x: visible;
+}
+/* Table of Contents Chapter Number Format */
+table.tocChap { /* non-std */
+	table-layout: fixed;
+	border-collapse: collapse;
+	font-family: sans-serif;
+	font-size: 1.0rem;
+	color: #777777;
+	width: 100%;
+	text-align: center;
+	line-height: 2.0;
+}
+/* Table of Contents Chapter number cells */
+td.tocChap { /* non-std */
+	border-width: 1px;
+	border-style: solid;
+	border-color: #777777;
+}
+#settingRoot {
+    /*backgroundColor is set in SettingsView.showView */
+    position: absolute; /* Needed because settingRoot.style.y is set in AppControllerView */
+    padding-left:3%;
+    padding-right:3%;
+    padding-top:1%;
+    padding-bottom:10px;
+    margin:0;
+}
+td {
+	border:none;
+}
+#settingsTable {
+	width:100%;
+}
+#sampleText {
+	font-family: serif;
+	background-color: #EEEEEE;
+	color:black;
+	padding: 10px;
+}
+td.rowSpace {
+	padding: 7px;
+	width:100%;
+}
+
+/* Font Size Control */
+#fontSizeControl {
+	padding-top:25px;
+	padding-bottom:10px;
+}
+#fontSizeSlider {
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom: 0px;
+	border-radius: 24px; /* was 7px */
+	background-color: #3EA9D2;
+	width:80%;
+	height:48px; /* was 7px */
+}
+#fontSizeThumb {
+	height: 40px;
+	width: 40px;
+	z-index:100;
+	margin-top: -30px;
+	background: #eee;
+	border: solid 4px #bcbbbb;
+	border-radius: 2em;
+	box-shadow: 4px 4px 5px #777;
+	-webkit-box-shadow: 4px 4px 5px #777;
+}
+/** RateMeView **/
+#ratebtn {
+	margin-top: 24px;
+	margin-bottom: 24px;
+	background: #2E9EC9;
+  	background-image: linear-gradient(to bottom, #2E9EC9, #2980b9);
+	-webkit-border-radius: 28;
+	-moz-border-radius: 28;
+	border-radius: 28px;
+	font-family: sans-serif;
+	color: #ffffff;
+	font-size: 1.0rem;
+	padding: 10px 30px 10px 30px;
+	text-decoration: none;
+}
+
+/* Font Color Control */
+/* Keep as example of toggle control */
+/*
+td.tableLeftCol {
+    width:40%;
+    vertical-align:middle;
+    text-align:center;
+}
+td.tableCtrlCol {
+    width:20%;
+    vertical-align:middle;
+    text-align:center;
+    margin:auto;
+}
+td.tableRightCol {
+    width:40%;
+    vertical-align:middle;
+    text-align: center;
+}
+#blackBackground {
+	background-color:white;
+	color:black;
+	border-radius: 14px;
+}
+#whiteBackground {
+	background-color:black;
+	color:white;
+	border-radius: 14px;
+}
+#fontColorSlider {
+	background-color:#EEEEEE;
+	height:44px;
+	width:88px;
+	border-radius: 22px;
+	box-shadow: inset 0 0 5px #888;
+	border: solid;
+	border-width:1px;
+	margin:auto;
+}
+#fontColorThumb {
+	height: 34px;
+	width: 34px;
+	z-index:100;
+	background: #eee;
+	border: solid 4px #bcbbbb;
+	border-radius: 2em;
+	box-shadow: 4px 4px 5px #777;
+}
+*/
+/* VersionsView CSS */
+table.ctry {
+    background-color: #EEEEEE;
+	border-radius: 48px;
+	margin-bottom: 20px;
+	font-family: sans-serif;
+	box-shadow: 7px 7px 7px #777;
+	-webkit-box-shadow: 7px 7px 7px #777;
+	width: 100%;
+	direction: ltr;
+}
+td.ctryFlag {
+	vertical-align: middle;
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-top: 10px; /* Added for World may be incorrect for other flags. */
+	padding-bottom: 10px; /* Added for World may be incorrect for other flags. */
+	width: 10%;
+}
+td.ctryFlag img {
+	vertical-align: middle;
+}
+td.localCtryName {
+	font-size: 1.6rem;
+	vertical-align: middle;
+	width: auto;	
+}
+p.shortsands {
+	font-family: sans-serif;
+	font-size: 0.66rem;
+	color: #777777;
+	direction: ltr;
+}
+span.shortsands {
+	font-family: sans-serif;
+	font-size: 0.66rem;
+	color: #777777;
+	direction: ltr;
+}
+table.vers {
+	width: 100%;
+    background-color: #EEEEEE;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	box-shadow: 4px 4px 5px #777;
+	-webkit-box-shadow: 4px 4px 5px #777;
+	padding-top: 1%;
+	padding-bottom: 1%;
+	padding-left: 4%;
+	padding-right:4%;
+	direction: ltr;
+}
+td.versLeft {
+	width:90%;
+}
+td.versRight {
+	text-align:right;
+}
+p.langName {
+	font-size: 1.2rem;
+	margin-top:0px;
+	margin-bottom:10px;	
+}
+span.langName {
+	font-size: 1.2rem;
+	margin-top:0px;
+	margin-bottom:10px;	
+	display: inline-block; /* add to text-indent work with inline element */
+}
+p.versDesc {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+span.versDesc {
+	margin-top: 0;
+	margin-bottom: 0;
+	display: inline-block; /* add to text-indent work with inline element */
+}
+span.versName {
+	font-size: 1.1rem;
+}
+bdi.versAbbr {
+	font-family: sans-serif;
+	font-size: 0.7rem;
+	color: #777777;
+	vertical-align: text-middle;
+}
+bdi.versOwner {
+	font-size: 1.0rem;
+}
+button.versIcon {
+	border: none; 
+	background-color: #EEEEEE; /* same as table.vers */
+}
+#videoRoot {
+    position: absolute; /* Needed because settingRoot.style.y is set in AppControllerView */
+	background-color: white;
+	z-index: 20;
+	/*width: 100%; must be set explicity in VideoListView */
+}
+table.videoList {
+    border-spacing: 20px;
+	background-color: white;
+	/*width: 100%; must be set explicity in VideoListView */
+}
+tr.videoList {
+
+}
+td.videoList {
+	background-color: #F2F2F2;
+	box-shadow: 4px 4px 5px #BBB;
+}
+img.videoList {
+	width: 100%;
+}
+div.videoList {
+	
+}
+p.videoListTitle {
+	font-family: sans-serif;
+	font-size: 1.2rem;
+	text-transform: none;
+	text-align: center;
+	margin-top: 15px;
+	margin-bottom: 0px;
+	margin-left: 5px;
+	margin-right: 4px;
+}
+span.videoListTitle {
+	font-family: sans-serif;
+	font-size: 1.2rem;
+	text-transform: none;
+	text-align: center;
+	margin-top: 15px;
+	margin-bottom: 0px;
+	margin-left: 5px;
+	margin-right: 4px;
+	display: inline-block; /* add to text-indent work with inline element */
+}
+img.videoListPlay {
+	margin-top: -18px;
+    float: left;
+    height: 88px;
+    width: 88px;
+}
+img.videoListInfo {
+	margin-top: -18px;
+	float: right;
+	height: 88px;
+	width: 88px;
+}
+p.videoListDur {
+	font-family: sans-serif;
+	font-size: 0.8rem;
+	text-transform: none;
+	text-align: center;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+span.videoListDur {
+	font-family: sans-serif;
+	font-size: 0.8rem;
+	text-transform: none;
+	text-align: center;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	display: inline-block; /* add to text-indent work with inline element */
+}
+p.videoListDesc {
+	clear: both;
+	font-family: serif;
+	font-size: 1.0rem;
+	text-transform: none;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;	
+}
+span.videoListDesc {
+	clear: both;
+	font-family: serif;
+	font-size: 1.0rem;
+	text-transform: none;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;	
+	display: inline-block; /* add to text-indent work with inline element */
+}

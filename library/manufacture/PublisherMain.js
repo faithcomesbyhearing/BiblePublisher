@@ -21,6 +21,8 @@ PublisherMain.prototype.process = function(inputDir, outputDir, bibleId, iso3, i
 			process.exit(1);
 		} else {
 			console.log('Success, Bible created');
+			var htmlPageBuilder = new HTMLPageBuilder(bibleId, outputDir, database);
+			htmlPageBuilder.process();
 		}
 	});
 };
